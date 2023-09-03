@@ -40,19 +40,6 @@ public class User {
     @NotEmpty(message = "Password cannot be null")
     private String password;
 
-    @NotEmpty(message = "Name cannot be null")
-    private String name;
-
-    @NotEmpty(message = "Address cannot be null")
-    private String address;
-
-    @NotEmpty(message = "Email cannot be null")
-    @Email(message = "Email invalid")
-    private String email;
-
-    @NotEmpty(message = "Phone cannot be null")
-    private String phone;
-
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL) //EAGER tải toàn bộ dữ liệu cùng lúc của bảng khóa ngoại, CascadeType.ALL lan truyền sự kiện giữa Parent Table and Child Table
     @JoinTable(name = "user_role"
         ,joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id") //Đem cột id trong bảng user vào thành user_id

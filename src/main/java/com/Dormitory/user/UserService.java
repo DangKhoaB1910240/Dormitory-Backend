@@ -43,26 +43,26 @@ public class UserService {
         this.jwtGenerator = jwtGenerator;
     }
 
-    @Transactional //Đánh dấu là 1 giao dịch, nếu có vấn đề nó rollback hết
-    public void register(User user) {
+    // @Transactional //Đánh dấu là 1 giao dịch, nếu có vấn đề nó rollback hết
+    // public void register(User user) {
 
-        // Nếu tài khoản tồn tại thì ném ra exception
-        if(userRepository.existsByUsername(user.getUsername())) {
-            throw new UsernameAlreadyExistsException("Account already exists", BAD_REQUEST);
-        }
+    //     // Nếu tài khoản tồn tại thì ném ra exception
+    //     if(userRepository.existsByUsername(user.getUsername())) {
+    //         throw new UsernameAlreadyExistsException("Account already exists", BAD_REQUEST);
+    //     }
 
-        //Tìm role
-        Role role = roleRepository.findByName("CUSTOMER");
+    //     //Tìm role
+    //     Role role = roleRepository.findByName("CUSTOMER");
 
-        // Set role
-        user.setRoles(Collections.singletonList(role));
+    //     // Set role
+    //     user.setRoles(Collections.singletonList(role));
         
-        // Mã hóa mật khẩu
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    //     // Mã hóa mật khẩu
+    //     user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Save Mật khẩu
-        userRepository.save(user);
-    }
+    //     // Save Mật khẩu
+    //     userRepository.save(user);
+    // }
 
     public String login(LoginDTO loginDTO) {
 

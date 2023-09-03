@@ -29,11 +29,11 @@ public class UserResource {
         this.userService = userService;
     }
 
-    @PostMapping("register")
-    public ResponseEntity<SuccessMessage> register( @Valid @RequestBody User user) {
-        userService.register(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessMessage("Account successfully created"));
-    }
+    // @PostMapping("register")
+    // public ResponseEntity<SuccessMessage> register( @Valid @RequestBody User user) {
+    //     userService.register(user);
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessMessage("Account successfully created"));
+    // }
 
     @PostMapping("login")
     public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginDTO loginDTO){ 
