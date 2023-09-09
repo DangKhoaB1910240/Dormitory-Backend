@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,26 +45,26 @@ public class UserService {
         this.jwtGenerator = jwtGenerator;
     }
 
-    // @Transactional //Đánh dấu là 1 giao dịch, nếu có vấn đề nó rollback hết
-    // public void register(User user) {
+    @Transactional //Đánh dấu là 1 giao dịch, nếu có vấn đề nó rollback hết
+    public void register(User user) {
 
-    //     // Nếu tài khoản tồn tại thì ném ra exception
-    //     if(userRepository.existsByUsername(user.getUsername())) {
-    //         throw new UsernameAlreadyExistsException("Account already exists", BAD_REQUEST);
-    //     }
+        // Nếu tài khoản tồn tại thì ném ra exception
+        if(userRepository.existsByUsername(user.getUsername())) {
+            throw new UsernameAlreadyExistsException("Account already exists", BAD_REQUEST);
+        }
 
-    //     //Tìm role
-    //     Role role = roleRepository.findByName("CUSTOMER");
+        //Tìm role
+        Role role = roleRepository.findByName("ADMIN");
 
-    //     // Set role
-    //     user.setRoles(Collections.singletonList(role));
+        // Set role
+        user.setRoles(Collections.singletonList(role));
         
-    //     // Mã hóa mật khẩu
-    //     user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Mã hóa mật khẩu
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-    //     // Save Mật khẩu
-    //     userRepository.save(user);
-    // }
+        // Save Mật khẩu
+        userRepository.save(user);
+    }
 
     public String login(LoginDTO loginDTO) {
 
@@ -74,6 +76,14 @@ public class UserService {
         String token = jwtGenerator.generateToken(authentication);
 
         return token;
+    }
+
+    public List<String> getRoleByUsername(String username) {
+        if(!userRepository.existsByUsername(username)) {
+            throw new UsernameNotFoundException(username + " not found");
+        }else { 
+            return userRepository.findRoleNamesByUsername(username);
+        }
     }
 
 }

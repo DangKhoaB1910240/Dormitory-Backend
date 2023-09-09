@@ -1,6 +1,8 @@
 package com.Dormitory.role;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,6 +20,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Khóa chính tăng tự động
     private Integer id;
 
+    
     private String name;
     
 }

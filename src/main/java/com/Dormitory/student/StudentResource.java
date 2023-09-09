@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,7 @@ public class StudentResource {
     @GetMapping
     public ResponseEntity<StudentResponseDTO> getStudentByNoStudent(@RequestParam("numberStudent") String numberStudent) {
         Optional<Student> student = studentService.getStudentByNoStudent(numberStudent);
-        
+
         if(student.isPresent()) {
             StudentResponseDTO studentResponseDTO = new StudentResponseDTO(
             student.get().getId(),
