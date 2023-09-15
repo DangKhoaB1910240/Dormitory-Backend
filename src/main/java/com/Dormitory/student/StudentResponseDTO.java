@@ -1,5 +1,7 @@
 package com.Dormitory.student;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +25,7 @@ public class StudentResponseDTO {
 
     private String major;
 
-    private String birthday;
+    private LocalDate birthday;
 
     private Integer gender;
 

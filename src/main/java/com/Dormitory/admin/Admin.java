@@ -1,9 +1,5 @@
-package com.Dormitory.student;
+package com.Dormitory.admin;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import com.Dormitory.feedback.RoomFeedback;
 import com.Dormitory.user.User;
 
 import jakarta.persistence.Column;
@@ -12,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -25,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity // Tạo bảng trong CSDL
-public class Student {
+public class Admin {
     
     @Id // Đánh dấu đây là ID
     @GeneratedValue(strategy = GenerationType.IDENTITY) // trường tăng tự động
@@ -33,7 +28,7 @@ public class Student {
 
     @Column(unique = true)
     @NotEmpty(message = "Username cannot be empty")
-    private String numberStudent;
+    private String numberAdmin;
 
     @NotEmpty(message = "Name cannot be empty")
     private String name;
@@ -48,13 +43,14 @@ public class Student {
     @NotEmpty(message = "Phone cannot be empty")
     private String phone;
 
-    @NotEmpty(message = "Major cannot be empty")
-    private String major;
+    @NotEmpty(message = "Position cannot be empty")
+    private String position;
 
-    private LocalDate birthday;
+    @NotEmpty(message = "Birthday cannot be empty")
+    private String birthday;
 
     @NotNull(message = "Gender cannot be null")
-    private Integer gender;//1 -> boy, 0-> girl
+    private Integer gender;
 
     @NotEmpty(message = "Classroom cannot be empty")
     private String classroom;
@@ -63,6 +59,4 @@ public class Student {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "student")
-    private List<RoomFeedback> feedbacks;
 }

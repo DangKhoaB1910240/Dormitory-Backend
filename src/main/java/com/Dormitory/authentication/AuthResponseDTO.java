@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class AuthResponseDTO {
-
     @NonNull
     private String accessToken;
     private String typeToken = new String("Bearer ");

@@ -4,16 +4,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.Dormitory.image.Image;
+import com.Dormitory.room.Room;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,23 +28,41 @@ public class RoomType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty(message = "Name cannot be empty")
+    @Column(unique = true)
     private String name;
 
+    @NotNull(message = "MaxQuantity cannot be empty")
     private Integer maxQuantity;
 
     @OneToMany(mappedBy = "roomType")//ánh xạ tên biến bên Image
     private List<Image> images;
 
+    @NotNull(message = "Price cannot be empty")
     private Float price;
 
-    private Boolean isAirConditioned;
+    @NotNull(message = "IsAirConditioned cannot be empty")
+    private Boolean isAirConditioned; // Có máy lạnh không
 
-    private Boolean isCooked;
+    @NotNull(message = "IsCooked cannot be empty")
+    private Boolean isCooked; // Có nấu ăn không
 
-    private Boolean enable;
+    private Boolean enable = true;
 
-    private LocalDate createdDate;
+    private LocalDate createdDate = LocalDate.now();
 
-    private LocalDate updatedDate;
+    private LocalDate updatedDate = LocalDate.now();
+
+    @OneToMany(mappedBy = "roomType") // Một RoomType có nhiều Room, ánh xạ đến trường roomType trong lớp Room
+    private List<Room> rooms;
+    
+    public RoomType(String name, Integer maxQuantity, Float price, Boolean isAirConditioned,
+            Boolean isCooked) {
+        this.name = name;
+        this.maxQuantity = maxQuantity;
+        this.price = price;
+        this.isAirConditioned = isAirConditioned;
+        this.isCooked = isCooked;
+    }
 
 }

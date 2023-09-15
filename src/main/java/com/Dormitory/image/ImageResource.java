@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/image")
+@RequestMapping("/api/v1/image")
 public class ImageResource {
     @Autowired
 	private ImageService service;
 
-	@PostMapping
-	public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
-		String uploadImage = service.uploadImage(file);
+	@PostMapping("/{room_id}")
+	public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file, @PathVariable("room_id") Integer roomId) throws IOException {
+		String uploadImage = service.uploadImage(file,roomId);
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(uploadImage);
 	}

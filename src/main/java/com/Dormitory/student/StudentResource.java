@@ -32,7 +32,7 @@ public class StudentResource {
             student.get().getMajor(),
             student.get().getBirthday(),
             student.get().getGender(),
-             student.get().getClassroom()) ;
+            student.get().getClassroom()) ;
             return ResponseEntity.status(HttpStatus.OK).body(studentResponseDTO);
         }else {
             return ResponseEntity.notFound().build();

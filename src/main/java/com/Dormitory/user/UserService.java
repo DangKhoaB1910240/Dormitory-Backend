@@ -15,8 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.Dormitory.config.JwtGenerator;
-import com.Dormitory.exception.UsernameAlreadyExistsException;
-import com.Dormitory.login.LoginDTO;
+import com.Dormitory.exception.AlreadyExistsException;
 import com.Dormitory.role.Role;
 import com.Dormitory.role.RoleRepository;
 
@@ -50,11 +49,11 @@ public class UserService {
 
         // Nếu tài khoản tồn tại thì ném ra exception
         if(userRepository.existsByUsername(user.getUsername())) {
-            throw new UsernameAlreadyExistsException("Account already exists", BAD_REQUEST);
+            throw new AlreadyExistsException("Account already exists");
         }
 
         //Tìm role
-        Role role = roleRepository.findByName("ADMIN");
+        Role role = roleRepository.findByName("STUDENT");
 
         // Set role
         user.setRoles(Collections.singletonList(role));
@@ -66,10 +65,10 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String login(LoginDTO loginDTO) {
+    public String login(User user) {
 
         Authentication authentication = authenticationManager
-            .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
+            .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
