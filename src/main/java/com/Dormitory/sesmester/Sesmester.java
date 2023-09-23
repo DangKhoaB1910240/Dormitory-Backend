@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.Dormitory.reservation.RoomReservation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,8 +33,13 @@ public class Sesmester {
 
     private LocalDate endDate;
 
+    private LocalDate registrationStartDate;
+
+    private LocalDate registrationEndDate;
+
     private Boolean status = false; //Coi học kỳ đã được mở chưa
 
+    @JsonIgnore
     @OneToMany(mappedBy = "sesmester")
     private List<RoomReservation> roomReservations;
 

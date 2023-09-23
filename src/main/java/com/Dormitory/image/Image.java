@@ -1,6 +1,7 @@
 package com.Dormitory.image;
 
 import com.Dormitory.roomtype.RoomType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +34,7 @@ public class Image {
     @Column(columnDefinition = "LONGBLOB")
     private byte[] imageData;
 
+    @JsonIgnore // Phớt lờ không cho nó xuất
     @ManyToOne
     @JoinColumn(name = "roomtype_id")
     private RoomType roomType;

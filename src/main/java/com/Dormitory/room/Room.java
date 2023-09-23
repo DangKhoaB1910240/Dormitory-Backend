@@ -6,6 +6,7 @@ import java.util.List;
 import com.Dormitory.feedback.RoomFeedback;
 import com.Dormitory.reservation.RoomReservation;
 import com.Dormitory.roomtype.RoomType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,13 +37,16 @@ public class Room {
 
     private Integer gender; //1 -> boy, 0-> girl
 
+    @JsonIgnore
     @ManyToOne // Một Room thuộc về một RoomType
     @JoinColumn(name = "room_type_id") // Đánh dấu khóa ngoại trỏ đến RoomType
     private RoomType roomType;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room")
     private List<RoomReservation> roomReservations;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room")
     private List<RoomFeedback> feedbacks;
 }

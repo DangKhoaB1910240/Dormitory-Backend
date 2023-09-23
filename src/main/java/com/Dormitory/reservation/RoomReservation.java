@@ -29,7 +29,7 @@ public class RoomReservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    
     private LocalDateTime bookingDateTime = LocalDateTime.now();
 
     private Boolean status = false;

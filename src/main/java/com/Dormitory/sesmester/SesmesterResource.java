@@ -1,7 +1,6 @@
-package com.Dormitory.room;
+package com.Dormitory.sesmester;
 
-import java.util.List;
-
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,17 +10,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.websocket.server.PathParam;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
-@RequestMapping("api/v1/room")
-public class RoomResource {
-
+@RequestMapping("api/v1/sesmester")
+public class SesmesterResource {
     @Autowired
-    private RoomService roomService;
-
-    @GetMapping("{id}")
-    public ResponseEntity<List<Room>> findByRoomType_Id(@PathVariable("id") Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(roomService.findByRoomType_Id(id));
+    private SesmesterService sesmesterService;
+    
+    @GetMapping("status/{status}")
+    public ResponseEntity<Sesmester> getSesmesterByStatus(@PathVariable("status") Boolean status) {
+        return ResponseEntity.status(HttpStatus.OK).body(sesmesterService.getSesmesterByStatus(status));
     }
-
 }

@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 public class RoomReservationRequestDTO {
     @NotNull(message = "Sesmester id cannot be null")
     private Integer sesmester_id;
-    
     @NotNull(message = "Student id cannot be null")
     private Integer student_id;
-
     @NotNull(message = "Room id cannot be null")
     private Integer room_id;
 }
