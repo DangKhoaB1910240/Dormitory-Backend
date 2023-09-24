@@ -93,7 +93,7 @@ public class RoomReservationService {
         roomReservation.setStudent(student);
 
         if(roomReservationRepository.existsByStudentId(roomReservationDTO.getStudent_id())) {
-            roomReservationRepository.updateByStudentId(sesmester,room,roomReservation.getStudent().getId());
+            roomReservationRepository.updateByStudentId(sesmester,room,LocalDateTime.now(),roomReservation.getStudent().getId());
         }else {
             roomReservationRepository.save(roomReservation);
         }

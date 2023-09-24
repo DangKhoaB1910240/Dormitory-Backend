@@ -24,14 +24,19 @@ public class RoomReservationResource {
     @Autowired
     private RoomReservationService reservationService;
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<?> addRoomReservation(@Valid @RequestBody RoomReservationRequestDTO roomReservationDTO) {
         reservationService.addRoomReservation(roomReservationDTO);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<RoomReservationResponseDTO>> getAllRoomReservation() {
         return ResponseEntity.status(HttpStatus.OK).body(reservationService.getAllRoomReservation());
     }
+    @GetMapping("{id}")
+    public ResponseEntity<List<RoomReservationResponseDTO>> getR() {
+        return ResponseEntity.status(HttpStatus.OK).body(reservationService.getAllRoomReservation());
+    }
+
 }

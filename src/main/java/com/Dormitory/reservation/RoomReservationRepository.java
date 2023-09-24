@@ -1,5 +1,7 @@
 package com.Dormitory.reservation;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,8 +18,8 @@ public interface RoomReservationRepository extends JpaRepository<RoomReservation
     Boolean existsByStudentId(Integer id);
     List<RoomReservation> findAllByOrderByBookingDateTimeAsc();
     @Modifying
-    @Query("UPDATE RoomReservation r SET r.sesmester = :sesmester, r.room = :room WHERE r.student.id = :studentId")
-    void updateByStudentId(@Param("sesmester") Sesmester sesmester, @Param("room") Room room, @Param("studentId") Integer studentId);
+    @Query("UPDATE RoomReservation r SET r.sesmester = :sesmester, r.room = :room, r.bookingDateTime =:bookingDateTime WHERE r.student.id = :studentId")
+    void updateByStudentId(@Param("sesmester") Sesmester sesmester, @Param("room") Room room,@Param("bookingDateTime") LocalDateTime bookingDateTime, @Param("studentId") Integer studentId);
     @Modifying
     @Query("UPDATE RoomReservation r SET r.status = true where r.id = :id")
     void updateStatusToTrueById(@Param("id") Integer id);
