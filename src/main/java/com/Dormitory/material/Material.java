@@ -24,7 +24,7 @@ public class Material {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(unique = true)
-    private Integer name;
+    private String name;
     @OneToMany(mappedBy = "material")
     private List<RoomFeedback> feedbacks;
 }

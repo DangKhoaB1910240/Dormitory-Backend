@@ -1,6 +1,7 @@
 package com.Dormitory.roomtype;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -38,5 +39,6 @@ public interface RoomTypeRepository extends JpaRepository<RoomType, Integer> {
         Boolean isCooked, 
         Boolean isAirConditioned
     );
+    Optional<RoomType> findByRooms_Id(Integer id);
 }
 

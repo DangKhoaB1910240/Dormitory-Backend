@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import com.Dormitory.exception.roomreservation.NotSuitableForGender;
 import com.Dormitory.exception.sesmester.SesmesterDateValidationException;
 import com.Dormitory.room.Room;
 import com.Dormitory.room.RoomRepository;
+import com.Dormitory.roomtype.RoomType;
+import com.Dormitory.roomtype.RoomTypeRepository;
 import com.Dormitory.sesmester.Sesmester;
 import com.Dormitory.sesmester.SesmesterRepository;
 import com.Dormitory.student.Student;
@@ -31,40 +34,45 @@ public class RoomReservationService {
     private final SesmesterRepository sesmesterRepository;
     private final RoomRepository roomRepository;
     private final StudentRepository studentRepository;
+    private final RoomTypeRepository roomTypeRepository;
 
     @Autowired
     public RoomReservationService(RoomReservationRepository roomReservationRepository,
             SesmesterRepository sesmesterRepository, RoomRepository roomRepository,
-            StudentRepository studentRepository) {
+            StudentRepository studentRepository,RoomTypeRepository roomTypeRepository) {
         this.roomReservationRepository = roomReservationRepository;
         this.sesmesterRepository = sesmesterRepository;
         this.roomRepository = roomRepository;
         this.studentRepository = studentRepository;
+        this.roomTypeRepository = roomTypeRepository;
     }
 
-    public List<RoomReservationResponseDTO> getAllRoomReservation() {
-        List<RoomReservation> reservations = roomReservationRepository.findAllByOrderByBookingDateTimeAsc();
-        List<RoomReservationResponseDTO> responses = new ArrayList<>();
-        for(RoomReservation r: reservations) {
+    public void deleteById(Integer roomReservationId) {
+        roomReservationRepository.deleteById(roomReservationId);
+    }
 
-            RoomReservationResponseDTO response = new RoomReservationResponseDTO();
-            response.setId(r.getId());
-            response.setNumberStudent(r.getStudent().getNumberStudent());
-            response.setName(r.getStudent().getName());
-            response.setEmail(r.getStudent().getEmail());
-            response.setPhone(r.getStudent().getPhone());
-            response.setRoomTypeName(roomRepository.findRoomTypeNameById(r.getRoom().getId()));
-            response.setNumberRoom(r.getRoom().getNumberRoom());
-            //Format LocalDateTime 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
-            String formattedDateTime = r.getBookingDateTime().format(formatter);
-            response.setBookingDateTime(formattedDateTime);
-            response.setStatus(r.getStatus());
-            response.setNote(r.getNote());
-            responses.add(response);
+    public RoomReservationResponseDTO getRoomReservationByNoStudentAndSesmesterIsTrue(String noStudent) {
+        Optional<RoomReservation> roomReservation= roomReservationRepository.findRoomReservationsByStudentNumberAndSesmesterStatusIsTrue(noStudent) ;
+        if(roomReservation.isPresent()) {
+            RoomReservation r = roomReservation.get();
+            Optional<RoomType> roomType = roomTypeRepository.findByRooms_Id(r.getRoom().getId());
+            if(roomType.isPresent()) {
+                RoomReservationResponseDTO roomReservationResponseDTO = new RoomReservationResponseDTO();
+                roomReservationResponseDTO.setId(r.getId());
+                roomReservationResponseDTO.setBookingDateTime(r.getBookingDateTime());
+                roomReservationResponseDTO.setNote(r.getNote());
+                roomReservationResponseDTO.setStatus(r.getStatus());
+                roomReservationResponseDTO.setRoomType(roomType.get());
+                roomReservationResponseDTO.setRoom(r.getRoom());
+                roomReservationResponseDTO.setSesmester(r.getSesmester());
+                return roomReservationResponseDTO;
+            }
+            throw new NotFoundException("Không tồn tại loại phòng với phòng có id: "+r.getRoom().getId());
         }
-        return responses;
+        throw new NotFoundException("Không có thông tin đăng ký phòng với sinh viên có MSSV là: "+noStudent);
     }
+
+    
 
     @Transactional
     public void addRoomReservation(RoomReservationRequestDTO roomReservationDTO) {

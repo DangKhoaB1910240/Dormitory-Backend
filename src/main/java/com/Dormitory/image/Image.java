@@ -1,5 +1,7 @@
 package com.Dormitory.image;
 
+import java.security.Provider.Service;
+
 import com.Dormitory.roomtype.RoomType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,7 +28,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String name; //
     
     private String type;
 
@@ -35,7 +37,7 @@ public class Image {
     private byte[] imageData;
 
     @JsonIgnore // Phớt lờ không cho nó xuất
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "roomtype_id")
     private RoomType roomType;
 

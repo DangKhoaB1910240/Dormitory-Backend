@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import com.Dormitory.room.Room;
 import com.Dormitory.sesmester.Sesmester;
 import com.Dormitory.student.Student;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,18 +34,21 @@ public class RoomReservation {
     
     private LocalDateTime bookingDateTime = LocalDateTime.now();
 
-    private Boolean status = false;
+    private Integer status = 0;
 
     private String note = new String();
 
+    @JsonSerialize
     @ManyToOne
     @JoinColumn(name = "sesmester_id")
     private Sesmester sesmester;
 
+    @JsonSerialize
     @ManyToOne  
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "student_id")
     private Student student;

@@ -2,6 +2,10 @@ package com.Dormitory.reservation;
 
 import java.time.LocalDateTime;
 
+import com.Dormitory.room.Room;
+import com.Dormitory.roomtype.RoomType;
+import com.Dormitory.sesmester.Sesmester;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,13 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RoomReservationResponseDTO {
     private Integer id;
-    private String numberStudent; //MSSV
-    private String name; //Họ tên
-    private String email; 
-    private String phone;
-    private String roomTypeName;
-    private Integer numberRoom;
-    private String bookingDateTime;
-    private Boolean status;
+    private LocalDateTime bookingDateTime;
+    private Integer status;
     private String note; 
+    private Sesmester sesmester;
+    private Room room;
+    private RoomType roomType;
 }

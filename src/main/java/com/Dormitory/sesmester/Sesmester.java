@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.Dormitory.reservation.RoomReservation;
+import com.Dormitory.service.Services;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -43,4 +44,7 @@ public class Sesmester {
     @OneToMany(mappedBy = "sesmester")
     private List<RoomReservation> roomReservations;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "sesmester")
+    private List<Services> services;
 }

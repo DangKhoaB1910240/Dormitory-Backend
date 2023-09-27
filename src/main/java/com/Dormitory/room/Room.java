@@ -3,7 +3,6 @@ package com.Dormitory.room;
 
 import java.util.List;
 
-import com.Dormitory.feedback.RoomFeedback;
 import com.Dormitory.reservation.RoomReservation;
 import com.Dormitory.roomtype.RoomType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -46,7 +45,7 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<RoomReservation> roomReservations;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "room")
-    private List<RoomFeedback> feedbacks;
+    // @JsonIgnore
+    // @OneToMany(mappedBy = "room")
+    // private List<RoomFeedback> feedbacks;
 }
