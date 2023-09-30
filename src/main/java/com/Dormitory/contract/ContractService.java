@@ -38,7 +38,6 @@ public class ContractService {
         sesmesterRepository.findByIdAndStatus(contract.getSesmester().getId(), true).orElseThrow(() -> new SesmesterDateValidationException("Học kỳ đang đóng"));
         contractRepository.findBySesmesterIdAndStudentId(contract.getSesmester().getId(),contract.getStudent().getId()).orElseThrow(() -> new AlreadyExistsException("Sinh viên này đã đăng ký học kỳ này rồi"));
         // Lưu hợp đồng vào CSDL
-
         contractRepository.save(contract);
     }
     
