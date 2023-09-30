@@ -25,6 +25,7 @@ import com.Dormitory.sesmester.SesmesterRepository;
 import com.Dormitory.student.Student;
 import com.Dormitory.student.StudentRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -49,6 +50,41 @@ public class RoomReservationService {
 
     public void deleteById(Integer roomReservationId) {
         roomReservationRepository.deleteById(roomReservationId);
+    }
+    @Transactional
+    public RoomReservation updateRoomReservationStatusAndNote(Integer id, RoomReservation updatedReservation) {
+        // Tìm RoomReservation theo ID
+        RoomReservation existingReservation = roomReservationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy RoomReservation với ID: " + id));
+
+        // Cập nhật trạng thái và ghi chú nếu chúng được cung cấp
+        if (updatedReservation.getStatus() != null) {
+            existingReservation.setStatus(updatedReservation.getStatus());
+        }
+        if (updatedReservation.getNote() != null) {
+            existingReservation.setNote(updatedReservation.getNote());
+        }
+
+        // Lưu lại RoomReservation đã cập nhật
+        return roomReservationRepository.save(existingReservation);
+    }
+    public List<RoomReservationResponseDTO> getAllRoomReservationBySesmesterIsTrue() {
+        List<RoomReservation> roomReservations= roomReservationRepository.findAllBySesmesterStatusOrderByBookingDateTimeAsc(true) ;
+        List<RoomReservationResponseDTO> responses = new ArrayList<>();
+        for(RoomReservation r : roomReservations) {
+            Optional<RoomType> roomType = roomTypeRepository.findByRooms_Id(r.getRoom().getId());
+                RoomReservationResponseDTO roomReservationResponseDTO = new RoomReservationResponseDTO();
+                roomReservationResponseDTO.setId(r.getId());
+                roomReservationResponseDTO.setBookingDateTime(r.getBookingDateTime());
+                roomReservationResponseDTO.setNote(r.getNote());
+                roomReservationResponseDTO.setStatus(r.getStatus());
+                roomReservationResponseDTO.setRoomType(roomType.get());
+                roomReservationResponseDTO.setRoom(r.getRoom());
+                roomReservationResponseDTO.setSesmester(r.getSesmester());
+                roomReservationResponseDTO.setStudent(r.getStudent());
+                responses.add(roomReservationResponseDTO);
+        }return responses;
+        
     }
 
     public RoomReservationResponseDTO getRoomReservationByNoStudentAndSesmesterIsTrue(String noStudent) {

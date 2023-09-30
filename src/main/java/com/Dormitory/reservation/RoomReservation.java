@@ -48,7 +48,6 @@ public class RoomReservation {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "student_id")
     private Student student;

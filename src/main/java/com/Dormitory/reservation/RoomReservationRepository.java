@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 import com.Dormitory.room.Room;
 import com.Dormitory.sesmester.Sesmester;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface RoomReservationRepository extends JpaRepository<RoomReservation, Integer>{
     Boolean existsByStudentId(Integer id);
@@ -30,4 +32,5 @@ public interface RoomReservationRepository extends JpaRepository<RoomReservation
            "WHERE student.numberStudent = :numberStudent " +
            "AND sesmester.status = true")
     Optional<RoomReservation> findRoomReservationsByStudentNumberAndSesmesterStatusIsTrue(String numberStudent);
+    List<RoomReservation> findAllBySesmesterStatusOrderByBookingDateTimeAsc(Boolean status);
 }

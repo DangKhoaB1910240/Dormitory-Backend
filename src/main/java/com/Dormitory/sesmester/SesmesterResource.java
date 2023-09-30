@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.websocket.server.PathParam;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:4401"})
 @RequestMapping("api/v1/sesmester")
 public class SesmesterResource {
     @Autowired

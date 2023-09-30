@@ -1,5 +1,7 @@
 package com.Dormitory.admin;
 
+import java.time.LocalDate;
+
 import com.Dormitory.user.User;
 
 import jakarta.persistence.Column;
@@ -46,15 +48,12 @@ public class Admin {
     @NotEmpty(message = "Position cannot be empty")
     private String position;
 
-    @NotEmpty(message = "Birthday cannot be empty")
-    private String birthday;
+    @NotNull(message = "birthday cannot be null")
+    private LocalDate birthday;
 
     @NotNull(message = "Gender cannot be null")
     private Integer gender;
-
-    @NotEmpty(message = "Classroom cannot be empty")
-    private String classroom;
-
+    
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

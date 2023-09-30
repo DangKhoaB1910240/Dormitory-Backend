@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:4401"})
 @RequestMapping("api/v1/reservation")
 public class RoomReservationResource {
     
@@ -36,10 +36,21 @@ public class RoomReservationResource {
     public ResponseEntity<RoomReservationResponseDTO> getAllRoomReservationByNoStudentAndSesmesterIsTrue(@Valid @PathVariable("noStudent") String numberStudent) {
         return ResponseEntity.status(HttpStatus.OK).body(reservationService.getRoomReservationByNoStudentAndSesmesterIsTrue(numberStudent));
     }
+    @GetMapping("")
+    public ResponseEntity<List<RoomReservationResponseDTO>> getAllRoomReservationBySesmesterIsTrue() {
+        return ResponseEntity.status(HttpStatus.OK).body(reservationService.getAllRoomReservationBySesmesterIsTrue());
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<RoomReservationResponseDTO> deleteById(@Valid @PathVariable("id") Integer roomReservationId) {
         reservationService.deleteById(roomReservationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<RoomReservation> updateRoomReservationStatusAndNote(
+            @PathVariable Integer id,
+            @RequestBody RoomReservation updatedReservation) {
+        RoomReservation updatedRoomReservation = reservationService.updateRoomReservationStatusAndNote(id, updatedReservation);
+        return ResponseEntity.ok(updatedRoomReservation);
     }
 
 }

@@ -3,8 +3,8 @@ package com.Dormitory.student;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.Dormitory.feedback.RoomFeedback;
 import com.Dormitory.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,10 +59,8 @@ public class Student {
     @NotEmpty(message = "Classroom cannot be empty")
     private String classroom;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-    @OneToMany(mappedBy = "student")
-    private List<RoomFeedback> feedbacks;
 }

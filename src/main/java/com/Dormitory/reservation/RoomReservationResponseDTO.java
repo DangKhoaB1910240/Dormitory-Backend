@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.Dormitory.room.Room;
 import com.Dormitory.roomtype.RoomType;
 import com.Dormitory.sesmester.Sesmester;
+import com.Dormitory.student.Student;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,4 +22,5 @@ public class RoomReservationResponseDTO {
     private Sesmester sesmester;
     private Room room;
     private RoomType roomType;
+    private Student student;
 }
