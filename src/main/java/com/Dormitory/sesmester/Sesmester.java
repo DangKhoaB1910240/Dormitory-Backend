@@ -40,11 +40,8 @@ public class Sesmester {
 
     private Boolean status = false; //Coi học kỳ đã được mở chưa
 
+    private int holidayWeek = 0;
     @JsonIgnore
     @OneToMany(mappedBy = "sesmester")
     private List<RoomReservation> roomReservations;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "sesmester")
-    private List<Services> services;
 }

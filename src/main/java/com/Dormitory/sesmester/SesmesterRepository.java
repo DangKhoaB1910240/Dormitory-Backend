@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SesmesterRepository extends JpaRepository<Sesmester, Integer> {
-    @Query("SELECT CASE WHEN COUNT(s) > 0 THEN TRUE ELSE FALSE END FROM Sesmester s WHERE s.id = :id AND s.startDate <= :currentDate AND s.endDate >= :currentDate")
-    Boolean existsByIdAndDateRange(@Param("id") Integer id, @Param("currentDate") LocalDate currentDate);
+    @Query("SELECT s FROM Sesmester s WHERE s.id = :id AND s.registrationStartDate <= :currentDate AND s.registrationEndDate >= :currentDate")
+    Sesmester existsByIdAndDateRange(@Param("id") Integer id, @Param("currentDate") LocalDate currentDate);
     Sesmester findByStatus(Boolean status);
     Optional<Sesmester> findByIdAndStatus(Integer sesmesterId,Boolean status);
 }

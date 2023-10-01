@@ -2,7 +2,6 @@ package com.Dormitory.reservation;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +9,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.Dormitory.exception.AlreadyExistsException;
 import com.Dormitory.exception.InvalidValueException;
 import com.Dormitory.exception.NotFoundException;
 import com.Dormitory.exception.room.RoomNotEnabledException;
@@ -61,6 +59,15 @@ public class RoomReservationService {
         if (updatedReservation.getStatus() != null) {
             existingReservation.setStatus(updatedReservation.getStatus());
         }
+        if(updatedReservation.getStatus() == 1) {
+            if(existingReservation.getRoom().getCurrentQuantity()>=  existingReservation.getRoom().getRoomType().getMaxQuantity()) {
+                throw new InvalidValueException("Số lượng sinh viên trong phòng đã đủ");
+            }
+            if(existingReservation.getRoom().getEnable() == false) {
+                throw new InvalidValueException("Phòng đang sửa chữa");
+            }
+        }
+        
         if (updatedReservation.getNote() != null) {
             existingReservation.setNote(updatedReservation.getNote());
         }
@@ -125,7 +132,7 @@ public class RoomReservationService {
         if(room.getEnable() == false) {
             throw new RoomNotEnabledException("Phòng hiện không còn hoạt động");
         }
-        if(sesmesterRepository.existsByIdAndDateRange(sesmester.getId(), LocalDate.now()) == false){
+        if(sesmesterRepository.existsByIdAndDateRange(sesmester.getId(), LocalDate.now()) == null){
             throw new SesmesterDateValidationException("Chưa tới thời gian đăng ký phòng ở ký túc xá");
         }
         if(student.getGender() != room.getGender()) {

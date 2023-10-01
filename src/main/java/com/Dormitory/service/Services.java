@@ -29,7 +29,4 @@ public class Services {
     @NotNull(message = "Giá dịch vụ không được null")
     private Float price;
     private Boolean enable = true;
-    @ManyToOne
-    @JoinColumn(name = "sesmester_id")
-    private Sesmester sesmester;
 }

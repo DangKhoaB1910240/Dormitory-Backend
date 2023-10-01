@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,12 +25,15 @@ public class Payment {
     @Id // Đánh dấu đây là ID
     @GeneratedValue(strategy = GenerationType.IDENTITY) // trường tăng tự động
     private Integer id;
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "paymeny_method_id")
     private PaymentMethod paymentMethod;
+    @NotNull(message = "Hợp đồng không thể null")
     @OneToOne
     @JoinColumn(name = "contract_id")
     private Contract contract;
+    private Float totalPrice;
+    private Boolean isPay = false;
     private LocalDate paymentDate = null;
 
 }

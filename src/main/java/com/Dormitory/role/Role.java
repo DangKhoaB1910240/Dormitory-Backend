@@ -20,7 +20,6 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Khóa chính tăng tự động
     private Integer id;
 
-    
     private String name;
     
 }

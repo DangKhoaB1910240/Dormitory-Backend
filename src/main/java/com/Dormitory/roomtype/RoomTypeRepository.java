@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoomTypeRepository extends JpaRepository<RoomType, Integer> {
     Boolean existsByName(String name);
-    
+    Optional<RoomType> findByName(String name);
     @Query("SELECT DISTINCT rt.maxQuantity FROM RoomType rt ORDER BY rt.maxQuantity ASC")
     List<Integer> findDistinctMaxQuantitiesSortedAsc();
-    //Viết một hàm để lấy ra RoomTypeResponseDTO 
+    //Viết một hàm để lấy ra RoowmTypeResponseDTO 
     // Có máy lạnh ? Có cho nấu ăn ? số lượng ? và giá 
 
     List<RoomType> findByMaxQuantity(Integer maxQuantity);

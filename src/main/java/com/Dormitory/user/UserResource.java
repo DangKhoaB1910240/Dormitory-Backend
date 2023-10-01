@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Dormitory.authentication.AuthResponseDTO;
 import com.Dormitory.message.SuccessMessage;
+import com.Dormitory.role.Role;
 
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200","http://localhost:4401"})
 @RequestMapping("api/v1/user")
 public class UserResource {
     

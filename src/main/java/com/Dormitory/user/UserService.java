@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.Dormitory.config.JwtGenerator;
 import com.Dormitory.exception.AlreadyExistsException;
+import com.Dormitory.exception.NotFoundException;
 import com.Dormitory.role.Role;
 import com.Dormitory.role.RoleRepository;
 
@@ -52,7 +53,7 @@ public class UserService {
             throw new AlreadyExistsException("Account already exists");
         }
 
-        //Tìm role
+        
         Role role = roleRepository.findByName("STUDENT");
 
         // Set role

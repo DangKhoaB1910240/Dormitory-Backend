@@ -3,6 +3,7 @@ package com.Dormitory.admin;
 import java.time.LocalDate;
 
 import com.Dormitory.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,15 +46,12 @@ public class Admin {
     @NotEmpty(message = "Phone cannot be empty")
     private String phone;
 
-    @NotEmpty(message = "Position cannot be empty")
-    private String position;
-
     @NotNull(message = "birthday cannot be null")
     private LocalDate birthday;
 
     @NotNull(message = "Gender cannot be null")
     private Integer gender;
-    
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
