@@ -3,7 +3,6 @@ package com.Dormitory.sesmester;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.Dormitory.reservation.RoomReservation;
 import com.Dormitory.service.Services;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -41,7 +40,4 @@ public class Sesmester {
     private Boolean status = false; //Coi học kỳ đã được mở chưa
 
     private int holidayWeek = 0;
-    @JsonIgnore
-    @OneToMany(mappedBy = "sesmester")
-    private List<RoomReservation> roomReservations;
 }

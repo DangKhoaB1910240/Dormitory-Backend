@@ -3,7 +3,6 @@ package com.Dormitory.room;
 
 import java.util.List;
 
-import com.Dormitory.reservation.RoomReservation;
 import com.Dormitory.roomtype.RoomType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -41,8 +40,5 @@ public class Room {
     @JoinColumn(name = "room_type_id") // Đánh dấu khóa ngoại trỏ đến RoomType
     private RoomType roomType;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "room")
-    private List<RoomReservation> roomReservations;
 
 }

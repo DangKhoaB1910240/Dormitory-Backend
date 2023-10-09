@@ -45,11 +45,6 @@ public class Contract {
     @JoinColumn(name = "student_id")
     private Student student; //Sinh viên nào gửi
 
-    @NotNull(message = "admin_id cannot be null")
-    @ManyToOne
-    @JoinColumn(name = "admin_id")
-    private Admin admin; //Sinh viên nào gửi
-
     @NotNull(message = "sesmester_id cannot be null")
     @ManyToOne
     @JoinColumn(name = "sesmester_id")
@@ -60,16 +55,16 @@ public class Contract {
     private String roomType;
     @NotNull(message = "numberRoom cannot be null")
     private Integer numberRoom;
-    private LocalDate createdDate= LocalDate.now() ;
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL) //EAGER tải toàn bộ dữ liệu cùng lúc của bảng khóa ngoại, CascadeType.ALL lan truyền sự kiện giữa Parent Table and Child Table
-    @JoinTable(name = "contract_service"
-        ,joinColumns = @JoinColumn(name = "contract_id",referencedColumnName = "id") //Đem cột id trong bảng user vào thành user_id
-        ,inverseJoinColumns  = @JoinColumn(name = "service_id",referencedColumnName = "id") //Đem cột id trong bảng Role vào thành role_id
-    )
-    private List<Services> services = new ArrayList<>();
+    // private LocalDate createdDate= LocalDate.now() ;
+    // @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL) //EAGER tải toàn bộ dữ liệu cùng lúc của bảng khóa ngoại, CascadeType.ALL lan truyền sự kiện giữa Parent Table and Child Table
+    // @JoinTable(name = "contract_service"
+    //     ,joinColumns = @JoinColumn(name = "contract_id",referencedColumnName = "id") //Đem cột id trong bảng user vào thành user_id
+    //     ,inverseJoinColumns  = @JoinColumn(name = "service_id",referencedColumnName = "id") //Đem cột id trong bảng Role vào thành role_id
+    // )
+    // private List<Services> services = new ArrayList<>();
 
-    // Cập nhật phòng nếu cần
-    private String roomTypeUpdate = null;
-    private Integer numberRoomUpdate = null;
-    private LocalDate updatedDate = null;
+    // // Cập nhật phòng nếu cần
+    // private String roomTypeUpdate = null;
+    // private Integer numberRoomUpdate = null;
+    // private LocalDate updatedDate = null;
 }

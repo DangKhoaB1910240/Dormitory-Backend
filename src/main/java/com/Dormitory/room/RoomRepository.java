@@ -15,4 +15,5 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
     @Query("SELECT r.numberRoom FROM Room r WHERE r.id= :roomId")
     Integer findNumberRoomById(@Param("roomId") Integer roomId);
     Optional<List<Room>> findByRoomType_Id(Integer roomTypeId);
+    Optional<Room> findByNumberRoomAndRoomType_Id(Integer numberRoom, Integer roomTypeId);
 }
