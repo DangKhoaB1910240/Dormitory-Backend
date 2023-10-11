@@ -1,5 +1,6 @@
 package com.Dormitory.vnpay;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -13,19 +14,52 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Dormitory.contract.Contract;
+import com.Dormitory.contract.ContractRepository;
+import com.Dormitory.exception.NotFoundException;
+
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.websocket.server.PathParam;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/v1")
 public class VNPayResource {
+    @Autowired
+    private ContractRepository contractRepository;
+    @GetMapping("payment-callback")
+    public void paymentCallback(@RequestParam Map<String, String> queryParams,HttpServletResponse response) throws IOException {
+        String vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
+        String message = new String();
+        
+        if ("00".equals(vnp_ResponseCode)) {
+            // Giao dịch thành công
+            // Thực hiện các xử lý cần thiết, ví dụ: cập nhật CSDL
+            Contract contract = contractRepository.findById(Integer.parseInt(queryParams.get("contractId")))
+            .orElseThrow(() -> new NotFoundException("Không tồn tại hợp đồng này của sinh viên"));
+           contract.setStatus(1);
+           contractRepository.save(contract);
+           response.sendRedirect("http://localhost:4200/info-student");
+        } else {
+            // Giao dịch thất bại
+            // Thực hiện các xử lý cần thiết, ví dụ: không cập nhật CSDL\
+            response.sendRedirect("http://localhost:4200/payment-failed");
+            
+        }
+
+    }
     @GetMapping("pay")
-	public String getPay(@PathParam("price") long price) throws UnsupportedEncodingException{
+	public String getPay(@PathParam("price") long price,@PathParam("id") Integer contractId) throws UnsupportedEncodingException{
 		
 		String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
@@ -51,7 +85,7 @@ public class VNPayResource {
         vnp_Params.put("vnp_OrderType", orderType);
 
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl+"?contractId="+contractId);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));

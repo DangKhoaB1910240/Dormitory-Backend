@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
     Optional<Contract> findBySesmesterIdAndStudentId(Integer sesmesterId, Integer studentId);
+   
 }

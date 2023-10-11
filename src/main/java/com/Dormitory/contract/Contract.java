@@ -55,6 +55,7 @@ public class Contract {
     private String roomType;
     @NotNull(message = "numberRoom cannot be null")
     private Integer numberRoom;
+    private Integer status = 0;
     // private LocalDate createdDate= LocalDate.now() ;
     // @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL) //EAGER tải toàn bộ dữ liệu cùng lúc của bảng khóa ngoại, CascadeType.ALL lan truyền sự kiện giữa Parent Table and Child Table
     // @JoinTable(name = "contract_service"
