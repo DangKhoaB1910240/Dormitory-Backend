@@ -1,6 +1,7 @@
 package com.Dormitory.email;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.Spring;
 import javax.swing.text.html.CSS;
@@ -14,16 +15,21 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.Dormitory.contract.Contract;
+import com.Dormitory.room.Room;
+import com.Dormitory.roomtype.RoomType;
+import com.Dormitory.sesmester.Sesmester;
+import com.Dormitory.student.Student;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.validation.Valid;
 
 @Service
 public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmail(Email email, String studentName) {
+    public void sendEmail(Email email, Student student,RoomType roomType, Room room, Sesmester sesmester,Contract contract) {
         //Basic thôi
         // SimpleMailMessage message = new SimpleMailMessage();
         // message.setFrom("khoab1910240@gmail.com");
@@ -31,7 +37,10 @@ public class EmailService {
         // message.setText(body);
         // message.setSubject(subject);
         // mailSender.send(message);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
         MimeMessage message = mailSender.createMimeMessage();
+        String isCooked = roomType.getIsCooked() == true ? "Cho phép" : "Không cho phép";
+        String isAir = roomType.getIsAirConditioned() == true ? "Có" : "Không có";
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom("Dormitory@gmail.com");
@@ -95,35 +104,35 @@ public class EmailService {
                     "      <table style=\"background-color: white\">\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Mã số sinh viên:</td>\r\n" + //
-                    "          <td>[Mã số sinh viên của bạn]</td>\r\n" + //
+                    "          <td>"+student.getNumberStudent()+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Tên:</td>\r\n" + //
-                    "          <td>[Tên của bạn]</td>\r\n" + //
+                    "          <td>"+student.getName()+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Ngày sinh:</td>\r\n" + //
-                    "          <td>[Ngày sinh của bạn]</td>\r\n" + //
+                    "          <td>"+formatter.format(student.getBirthday())+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Giới tính:</td>\r\n" + //
-                    "          <td>[Giới tính của bạn]</td>\r\n" + //
+                    "          <td>"+student.getGender()+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Lớp học:</td>\r\n" + //
-                    "          <td>[Lớp học của bạn]</td>\r\n" + //
+                    "          <td>"+student.getClassroom()+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Ngành:</td>\r\n" + //
-                    "          <td>[Ngành của bạn]</td>\r\n" + //
+                    "          <td>"+student.getMajor()+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Email:</td>\r\n" + //
-                    "          <td>[Địa chỉ email của bạn]</td>\r\n" + //
+                    "          <td>"+student.getEmail()+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Số điện thoại:</td>\r\n" + //
-                    "          <td>[Số điện thoại của bạn]</td>\r\n" + //
+                    "          <td>"+student.getPhone()+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "      </table>\r\n" + //
                     
@@ -131,31 +140,31 @@ public class EmailService {
                     "      <table style=\"background-color: white\">\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Loại phòng:</td>\r\n" + //
-                    "          <td>[Loại phòng]</td>\r\n" + //
+                    "          <td>"+roomType.getName()+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Số phòng:</td>\r\n" + //
-                    "          <td>[Số phòng]</td>\r\n" + //
+                    "          <td>"+room.getNumberRoom()+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Giá:</td>\r\n" + //
-                    "          <td>[Giá]</td>\r\n" + //
+                    "          <td>"+contract.getTotalPrice()+" vnđ</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Cho phép nấu ăn:</td>\r\n" + //
-                    "          <td>[Cho phép nấu ăn hay không]</td>\r\n" + //
+                    "          <td>"+isCooked+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Có máy lạnh:</td>\r\n" + //
-                    "          <td>[Có máy lạnh hay không]</td>\r\n" + //
+                    "          <td>"+isAir+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Ngày bắt đầu ở:</td>\r\n" + //
-                    "          <td>[Ngày bắt đầu thuê]</td>\r\n" + //
+                    "          <td>"+formatter.format(sesmester.getStartDate())+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "        <tr>\r\n" + //
                     "          <td class=\"title\">Ngày kết thúc:</td>\r\n" + //
-                    "          <td>[Ngày kết thúc thuê]</td>\r\n" + //
+                    "          <td>"+formatter.format(sesmester.getEndDate())+"</td>\r\n" + //
                     "        </tr>\r\n" + //
                     "      </table>\r\n" + //
                     "      <div>\r\n" + //
@@ -181,8 +190,8 @@ public class EmailService {
                     "            >\r\n" + //
                     "              <span style=\"font-size: 10pt\"\r\n" + //
                     "                ><strong\r\n" + //
-                    "                  >Thời gian ở KTX học kỳ [học kỳ], năm học [năm học]</strong\r\n" + //
-                    "                >: Tính từ ngày [thời gian ở] đến ngày [kết thúc]&nbsp;<em\r\n" + //
+                    "                  >Thời gian ở KTX học kỳ "+sesmester.getSesmester()+", năm học "+sesmester.getSchoolYear()+"</strong\r\n" + //
+                    "                >: Tính từ ngày "+formatter.format(sesmester.getStartDate())+" đến ngày "+formatter.format(sesmester.getEndDate())+"&nbsp;<em\r\n" + //
                     "                ></em>.</span\r\n" + //
                     "              >\r\n" + //
                     "            </li>\r\n" + //
@@ -225,27 +234,14 @@ public class EmailService {
                     "            >\r\n" + //
                     "              <span style=\"font-size: 10pt\"\r\n" + //
                     "                ><strong\r\n" + //
-                    "                  >Nộp phí ở KTX học kỳ 1, năm học 2023-2024. SV nộp phí từ ngày\r\n" + //
-                    "                  25/7 đến ngày 31/7/2023.&nbsp;</strong\r\n" + //
+                    "                  >Nộp phí ở KTX học kỳ "+sesmester.getSesmester()+", năm học "+sesmester.getSchoolYear()+". SV nộp phí từ ngày\r\n" + //
+                    "                  nhận thông báo đến hết ngày "+formatter.format(sesmester.getRegistrationEndDate())+".&nbsp;</strong\r\n" + //
                     "                >SV nộp phí cho cả học kỳ<strong>:<br /></strong\r\n" + //
-                    "                ><strong>&nbsp; &nbsp;-&nbsp;</strong\r\n" + //
                     "                ><strong\r\n" + //
-                    "                  >Nộp phí bằng hình thức chuyển khoản qua Ngân hàng\r\n" + //
-                    "                  HDBank&nbsp;</strong\r\n" + //
-                    "                >như sau:</span\r\n" + //
-                    "              ><br /><br /><span style=\"font-size: 10pt\"\r\n" + //
-                    "                >&nbsp; &nbsp; &nbsp; &nbsp; + Nội dung ghi cú\r\n" + //
-                    "                pháp:&nbsp;<strong\r\n" + //
-                    "                  ><em>Mã số SV – Tên SV – Số điện thoại.<br /></em></strong\r\n" + //
-                    "                >&nbsp; &nbsp; &nbsp; &nbsp; + Số tài khoản:&nbsp;<strong\r\n" + //
-                    "                  >0077 0407 0013 608<br /></strong\r\n" + //
-                    "                >&nbsp; &nbsp; &nbsp; &nbsp; + Ngân hàng Phát triển TP. HCM -\r\n" + //
-                    "                HDBank</span\r\n" + //
-                    "              ><br /><span style=\"font-size: 10pt\"\r\n" + //
-                    "                >&nbsp; &nbsp; &nbsp; &nbsp; + Tên người thụ hưởng&nbsp;<em\r\n" + //
-                    "                  >(nội dung tương tự)</em\r\n" + //
-                    "                >: Trường Đại học Cần Thơ.</span\r\n" + //
-                    "              >\r\n" + //
+                    "                  >Nộp phí bằng hình thức thanh toán trực tuyến trên hệ thống\r\n" + //
+                    "                  NCB&nbsp;</strong\r\n" + //
+                    "                ></span\r\n" + //
+                    "              ><br /><br />\r\n" + //
                     "            </li>\r\n" + //
                     "          </ol>\r\n" + //
                     "          <p\r\n" + //
@@ -256,40 +252,20 @@ public class EmailService {
                     "              padding: 0px;\r\n" + //
                     "              font-family: Arial, 'Arial Unicode MS', Helvetica, sans-serif;\r\n" + //
                     "              text-align: justify;\r\n" + //
-                    "            \"\r\n" + //
-                    "          >\r\n" + //
                     "            <span style=\"font-size: 10pt\"\r\n" + //
                     "              ><strong\r\n" + //
                     "                ><em\r\n" + //
                     "                  >&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<u>Lưu ý:</u></em\r\n" + //
                     "                ></strong\r\n" + //
-                    "              >&nbsp;Kiểm tra chính xác cú pháp&nbsp;<em\r\n" + //
-                    "                >(<strong>mã số SV, số điện thoại</strong>)</em\r\n" + //
-                    "              >&nbsp;trước khi thực hiện thao tác gửi. Nếu<strong\r\n" + //
-                    "                >&nbsp;sau 2 ngày làm việc, hệ thống chưa gạch nợ</strong\r\n" + //
-                    "              >&nbsp;thì chụp biên lai đã chuyển khoản thành công gửi về phòng\r\n" + //
-                    "              Tài chính qua địa chỉ hộp thư điện tử:&nbsp;<em\r\n" + //
-                    "                ><span\r\n" + //
-                    "                  id=\"m_2341066331444042184m_-3054875867105667879m_-3483802907812393388m_343678527146922972gmail-cloak47df7c3705ff065c9cb135db8527b727\"\r\n" + //
-                    "                  ><a\r\n" + //
-                    "                    href=\"mailto:ptc@ctu.edu.vn\"\r\n" + //
-                    "                    style=\"\r\n" + //
-                    "                      color: rgb(18, 105, 181);\r\n" + //
-                    "                      margin: 0px;\r\n" + //
-                    "                      padding: 0px;\r\n" + //
-                    "                      line-height: 20px;\r\n" + //
-                    "                      text-decoration-line: none;\r\n" + //
-                    "                    \"\r\n" + //
-                    "                    target=\"_blank\"\r\n" + //
-                    "                    >ptc@ctu.edu.vn</a\r\n" + //
-                    "                  ></span\r\n" + //
+                    "              >&nbsp;Nếu không đóng phí đúng thời hạn, sẽ bị thêm vào <em\r\n" + //
+                    "                ><b>DANH SÁCH ĐEN</b></em\r\n" + //
+                    "              >&nbsp;, kết quả đăng ký phòng sẽ bị hủy và không thể đăng ký ở các kỳ kế tiếp.<strong\r\n" + //
+                    "                >&nbsp;</strong\r\n" + //
+                    "              >&nbsp;\r\n" + //
+                    "              &nbsp;<em\r\n" + //
                     "                ></em\r\n" + //
-                    "              >&nbsp;<em>(để được gạch nợ)</em>.</span\r\n" + //
-                    "            ><br /><span style=\"font-size: 10pt\"\r\n" + //
-                    "              ><strong>&nbsp; &nbsp; &nbsp;- Nộp trực tiếp:&nbsp;</strong>SV có\r\n" + //
-                    "              thể nộp tại các điểm giao dịch của Ngân hàng HD Bank Cần\r\n" + //
-                    "              Thơ.</span\r\n" + //
-                    "            >\r\n" + //
+                    "              >&nbsp;</span\r\n" + //
+                    "            ><br />\r\n" + //fn
                     "          </p>\r\n" + //
                     "          <ol\r\n" + //
                     "            start=\"4\"\r\n" + //
@@ -313,12 +289,12 @@ public class EmailService {
                     "            >\r\n" + //
                     "              <span style=\"font-size: 10pt\"\r\n" + //
                     "                ><strong\r\n" + //
-                    "                  >SV không đăng ký ở tiếp trong học kỳ 1, năm học\r\n" + //
+                    "                  >SV cũ không đăng ký ở tiếp trong học kỳ 1, năm học\r\n" + //
                     "                  2023-2024:&nbsp;</strong\r\n" + //
                     "                >SV phải làm vệ sinh sạch sẽ giường ở, phòng ở trước khi hoàn\r\n" + //
                     "                thành thủ tục trả chỗ. SV tự làm hoặc thuê người dọn vệ sinh, tự\r\n" + //
                     "                thanh toán chi phí và hoàn tất thủ tục trả chỗ vào ngày\r\n" + //
-                    "                01/8/2023.</span\r\n" + //
+                    "                "+formatter.format(sesmester.getStartDate())+".</span\r\n" + //
                     "              >\r\n" + //
                     "            </li>\r\n" + //
                     "          </ol>\r\n" + //

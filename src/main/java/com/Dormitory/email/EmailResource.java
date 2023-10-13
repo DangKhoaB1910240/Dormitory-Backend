@@ -18,9 +18,9 @@ public class EmailResource {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping("")
-    public ResponseEntity<?> sendEmail(@Valid @RequestBody Email email, @RequestParam String studentName) {
-        emailService.sendEmail(email,studentName);
-        return ResponseEntity.ok().build();
-    }    
+    // @PostMapping("")
+    // public ResponseEntity<?> sendEmail(@Valid @RequestBody Email email, @RequestParam String studentName) {
+    //     emailService.sendEmail(email,studentName);
+    //     return ResponseEntity.ok().build();
+    // }    
 }

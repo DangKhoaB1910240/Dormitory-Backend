@@ -14,4 +14,7 @@ public interface SesmesterRepository extends JpaRepository<Sesmester, Integer> {
     Sesmester existsByIdAndDateRange(@Param("id") Integer id, @Param("currentDate") LocalDate currentDate);
     Sesmester findByStatus(Boolean status);
     Optional<Sesmester> findByIdAndStatus(Integer sesmesterId,Boolean status);
+    @Query("SELECT s FROM Sesmester s " +
+           "WHERE :currentDate BETWEEN s.registrationStartDate AND s.registrationEndDate")
+    Optional<Sesmester> findSesmesterByCurrentDate(@Param("currentDate") LocalDate currentDate);
 }

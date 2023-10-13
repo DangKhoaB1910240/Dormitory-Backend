@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.Dormitory.admin.Admin;
 import com.Dormitory.admin.AdminRepository;
+import com.Dormitory.email.Email;
+import com.Dormitory.email.EmailService;
 import com.Dormitory.exception.AlreadyExistsException;
 import com.Dormitory.exception.InvalidValueException;
 import com.Dormitory.exception.NotFoundException;
@@ -32,13 +34,15 @@ public class ContractService {
     private SesmesterRepository sesmesterRepository;
     private RoomTypeRepository roomTypeRepository;
     private RoomRepository roomRepository;
+    private EmailService emailService;
     @Autowired
-    public ContractService(ContractRepository contractRepository, StudentRepository studentRepository, SesmesterRepository sesmesterRepository,RoomTypeRepository roomTypeRepository,RoomRepository roomRepository) {
+    public ContractService(EmailService emailService,ContractRepository contractRepository, StudentRepository studentRepository, SesmesterRepository sesmesterRepository,RoomTypeRepository roomTypeRepository,RoomRepository roomRepository) {
         this.contractRepository = contractRepository;
         this.studentRepository = studentRepository;
         this.sesmesterRepository = sesmesterRepository;
         this.roomTypeRepository = roomTypeRepository;
         this.roomRepository=roomRepository;
+        this.emailService = emailService;
     }
 
     public Contract getContract(Integer studentId, Integer sesmesterId) {
@@ -84,6 +88,8 @@ public class ContractService {
         }else {
             throw new InvalidValueException("Phòng này đã đủ số lượng rồi");
         }
+        Email email = new Email(student.getEmail(), "THÔNG BÁO ĐẶT PHÒNG THÀNH CÔNG VÀ CÁC QUY ĐỊNH VỀ THỜI GIAN",null);
+        emailService.sendEmail(email, student,roomType,room,sesmester,contract);
         // Lưu hợp đồng vào CSDL
         contractRepository.save(contract);
     }
