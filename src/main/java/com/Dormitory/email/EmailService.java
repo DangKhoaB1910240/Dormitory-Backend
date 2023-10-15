@@ -1,20 +1,12 @@
 package com.Dormitory.email;
-
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import javax.swing.Spring;
-import javax.swing.text.html.CSS;
-import javax.swing.text.html.HTML;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import com.Dormitory.bill.Bill;
 import com.Dormitory.contract.Contract;
 import com.Dormitory.room.Room;
 import com.Dormitory.roomtype.RoomType;
@@ -362,6 +354,180 @@ public class EmailService {
             // + "<div>ĐT Văn phòng: 0292.3872275 - DĐ: 0975 185 994 (Zalo)</div>"
             // + "</div>";
             // htmlContent += "</body></html>";
+
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+    public void notificationBills(Email email,Student student, String roomType, Integer numberRoom,Integer electricityConsumed,Integer waterConsumed,Bill bill){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
+        MimeMessage message = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom("Dormitory@gmail.com");
+            helper.setTo(email.getToEmail());
+            helper.setSubject(email.getSubject());
+
+            // Tạo nội dung HTML với các thẻ và CSS tùy chỉnh
+            String htmlContent = "<!DOCTYPE html>\r\n" + //
+                    "<html>\r\n" + //
+                    "  <head>\r\n" + //
+                    "    <style>\r\n" + //
+                    "      /* CSS cho phần nội dung email */\r\n" + //
+                    "      body {\r\n" + //
+                    "        font-family: Arial, sans-serif;\r\n" + //
+                    "      }\r\n" + //
+                    "      .email-container {\r\n" + //
+                    "        max-width: 800px;\r\n" + //
+                    "        margin: 0 auto;\r\n" + //
+                    "        padding: 20px;\r\n" + //
+                    "        background-color: #f0f0f0;\r\n" + //
+                    "      }\r\n" + //
+                    "      .header {\r\n" + //
+                    "        background-color: #007bff;\r\n" + //
+                    "        color: #ffffff;\r\n" + //
+                    "        text-align: center;\r\n" + //
+                    "        padding: 10px;\r\n" + //
+                    "      }\r\n" + //
+                    "      table {\r\n" + //
+                    "        width: 100%;\r\n" + //
+                    "        margin-bottom: 20px;\r\n" + //
+                    "        border: 1px solid #ddd;\r\n" + //
+                    "        border-collapse: collapse;\r\n" + //
+                    "        border: none;\r\n" + //
+                    "      }\r\n" + //
+                    "      th,\r\n" + //
+                    "      td {\r\n" + //
+                    "        padding: 10px;\r\n" + //
+                    "      }\r\n" + //
+                    "      .footer {\r\n" + //
+                    "        background-color: #007bff;\r\n" + //
+                    "        color: #ffffff;\r\n" + //
+                    "        text-align: center;\r\n" + //
+                    "        padding: 10px;\r\n" + //
+                    "      }\r\n" + //
+                    "      .title {\r\n" + //
+                    "        font-weight: bold;\r\n" + //
+                    "      }\r\n" + //
+                    "      * {\r\n" + //
+                    "        margin: 0;\r\n" + //
+                    "        padding: 0;\r\n" + //
+                    "      }\r\n" + //
+                    "    </style>\r\n" + //
+                    "  </head>\r\n" + //
+                    "  <body>\r\n" + //
+                    "    <div class=\"email-container\">\r\n" + //
+                    "      <div class=\"header\">\r\n" + //
+                    "        <h3 style=\"font-weight: bold\">THÔNG BÁO ĐIỆN NƯỚC THÁNG "+bill.getCreatedDate().getMonthValue()+"</h3>\r\n" + //
+                    "      </div>\r\n" + //
+                    "      <div style=\"background-color: white\">\r\n" + //
+                    "        <table>\r\n" + //
+                    "          <tr>\r\n" + //
+                    "            <td class=\"title\">Mã số sinh viên:</td>\r\n" + //
+                    "            <td>"+student.getNumberStudent()+"</td>\r\n" + //
+                    "          </tr>\r\n" + //
+                    "          <tr>\r\n" + //
+                    "            <td class=\"title\">Họ tên:</td>\r\n" + //
+                    "            <td>"+student.getName()+"</td>\r\n" + //
+                    "          </tr>\r\n" + //
+                    "          <tr>\r\n" + //
+                    "            <td class=\"title\">Lớp:</td>\r\n" + //
+                    "            <td>"+student.getClassroom()+"</td>\r\n" + //
+                    "          </tr>\r\n" + //
+                    "          <tr>\r\n" + //
+                    "            <td class=\"title\">Ngành:</td>\r\n" + //
+                    "            <td>"+student.getMajor()+"</td>\r\n" + //
+                    "          </tr>\r\n" + //
+                    "          <tr>\r\n" + //
+                    "            <td class=\"title\">Loại phòng/ dãy:</td>\r\n" + //
+                    "            <td>"+roomType+"</td>\r\n" + //
+                    "          </tr>\r\n" + //
+                    "          <tr>\r\n" + //
+                    "            <td class=\"title\">Số phòng:</td>\r\n" + //
+                    "            <td>"+numberRoom+"</td>\r\n" + //
+                    "          </tr>\r\n" + //
+                    "          <!-- Thêm các dòng thông tin sinh viên ở đây -->\r\n" + //
+                    "        </table>\r\n" + //
+                    "        <div style=\"padding-left: 2%; padding-right: 2%; text-align: justify\">\r\n" + //
+                    "          <div>\r\n" + //
+                    "            <span style=\"font-weight: bold\">Tiền điện</span> = Lượng điện năng\r\n" + //
+                    "            tiêu thụ x đơn giá điện/kWh = "+electricityConsumed*1728+"đ\r\n" + //
+                    "          </div>\r\n" + //
+                    "          <div>\r\n" + //
+                    "            <span style=\"font-weight: bold\">Tiền nước</span> = Lượng nước tiêu\r\n" + //
+                    "            thụ x đơn giá nước/khối = "+waterConsumed*5973+"đ\r\n" + //
+                    "          </div>\r\n" + //
+                    "          <div>\r\n" + //
+                    "            <span style=\"font-weight: bold\">Tổng tiền</span> = Tiền điện + Tiền\r\n" + //
+                    "            nước = "+bill.getPrice()+"đ\r\n" + //
+                    "          </div>\r\n" + //
+                    "          <p>\r\n" + //
+                    "            <span style=\"font-weight: bold\">--->Lưu ý:</span> Vui lòng liên hệ\r\n" + //
+                    "            các sinh viên cùng phòng để thực hiện thanh toán tiền điện nước trên\r\n" + //
+                    "            hệ thống, hạn chót là ngày\r\n" + //
+                    "            <span style=\"color: red; font-weight: bold\">11/02/2021</span> . Nếu\r\n" + //
+                    "            không đóng đúng hẹn sẽ bị cắt điện nước.\r\n" + //
+                    "          </p>\r\n" + //
+                    "        </div>\r\n" + //
+                    "      </div>\r\n" + //
+                    "      <div>\r\n" + //
+                    "        <div>\r\n" + //
+                    "          <ol\r\n" + //
+                    "            style=\"\r\n" + //
+                    "              font-size: 13px;\r\n" + //
+                    "              color: rgb(17, 20, 23);\r\n" + //
+                    "              margin: 1em 0px 1em 11px;\r\n" + //
+                    "              padding: 0px;\r\n" + //
+                    "              list-style-position: inside;\r\n" + //
+                    "              font-family: Arial, 'Arial Unicode MS', Helvetica, sans-serif;\r\n" + //
+                    "              text-align: justify;\r\n" + //
+                    "            \"\r\n" + //
+                    "          >\r\n" + //
+                    "            <!-- Thêm danh sách các mục thông tin ở đây -->\r\n" + //
+                    "          </ol>\r\n" + //
+                    "          <p\r\n" + //
+                    "            style=\"\r\n" + //
+                    "              font-size: 13px;\r\n" + //
+                    "              color: rgb(17, 20, 23);\r\n" + //
+                    "              margin: 13px 0px;\r\n" + //
+                    "              padding: 0px;\r\n" + //
+                    "              font-family: Arial, 'Arial Unicode MS', Helvetica, sans-serif;\r\n" + //
+                    "              text-align: justify;\r\n" + //
+                    "            \"\r\n" + //
+                    "          >\r\n" + //
+                    "            <!-- Thêm nội dung lưu ý ở đây -->\r\n" + //
+                    "          </p>\r\n" + //
+                    "          <ol\r\n" + //
+                    "            start=\"4\"\r\n" + //
+                    "            style=\"\r\n" + //
+                    "              font-size: 13px;\r\n" + //
+                    "              color: rgb(17, 20, 23);\r\n" + //
+                    "              margin: 1em 0px 1em 11px;\r\n" + //
+                    "              padding: 0px;\r\n" + //
+                    "              list-style-position: inside;\r\n" + //
+                    "              font-family: Arial, 'Arial Unicode MS', Helvetica, sans-serif;\r\n" + //
+                    "              text-align: justify;\r\n" + //
+                    "            \"\r\n" + //
+                    "          >\r\n" + //
+                    "            <!-- Thêm các mục thông tin khác ở đây -->\r\n" + //
+                    "          </ol>\r\n" + //
+                    "        </div>\r\n" + //
+                    "      </div>\r\n" + //
+                    "      <div class=\"footer\">\r\n" + //
+                    "        <p>Ký túc xá Đại học Cần Thơ</p>\r\n" + //
+                    "        <p>Trung tâm phục vụ Sinh viên - Phòng Cộng tác sinh viên</p>\r\n" + //
+                    "        <p>\r\n" + //
+                    "          Điện thoại Văn phòng: 0292.3872275 - Điện thoại di động: 0975 185 994\r\n" + //
+                    "          (Zalo)\r\n" + //
+                    "        </p>\r\n" + //
+                    "      </div>\r\n" + //
+                    "    </div>\r\n" + //
+                    "  </body>\r\n" + //
+                    "</html>\r\n" + //
+                    "";
 
             helper.setText(htmlContent, true);
 

@@ -56,16 +56,4 @@ public class Contract {
     @NotNull(message = "numberRoom cannot be null")
     private Integer numberRoom;
     private Integer status = 0;
-    // private LocalDate createdDate= LocalDate.now() ;
-    // @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL) //EAGER tải toàn bộ dữ liệu cùng lúc của bảng khóa ngoại, CascadeType.ALL lan truyền sự kiện giữa Parent Table and Child Table
-    // @JoinTable(name = "contract_service"
-    //     ,joinColumns = @JoinColumn(name = "contract_id",referencedColumnName = "id") //Đem cột id trong bảng user vào thành user_id
-    //     ,inverseJoinColumns  = @JoinColumn(name = "service_id",referencedColumnName = "id") //Đem cột id trong bảng Role vào thành role_id
-    // )
-    // private List<Services> services = new ArrayList<>();
-
-    // // Cập nhật phòng nếu cần
-    // private String roomTypeUpdate = null;
-    // private Integer numberRoomUpdate = null;
-    // private LocalDate updatedDate = null;
 }
