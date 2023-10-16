@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Integer> {
     Optional<Bill> findFirstByRoomTypeAndNumberRoomOrderByCreatedDateDesc(String roomType, Integer numberRoom);
-    List<Bill> findByRoomTypeAndNumberRoom(String roomType, Integer numberRoom);
+    List<Bill> findByRoomTypeAndNumberRoomOrderByCreatedDateDesc(String roomType, Integer numberRoom);
 }

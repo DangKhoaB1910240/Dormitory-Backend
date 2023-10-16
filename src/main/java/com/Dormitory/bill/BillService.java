@@ -47,7 +47,7 @@ public class BillService {
         this.studentRepository = studentRepository;
     }
     public List<Bill> getByRoomTypeAndRoom(String roomType,Integer numberRoom) {
-        return billRepository.findByRoomTypeAndNumberRoom(roomType,numberRoom);
+        return billRepository.findByRoomTypeAndNumberRoomOrderByCreatedDateDesc(roomType,numberRoom);
     }
     public void addBill(Integer adminId,BillRequestDTO requestDTO) {
         Admin admin = adminRepository.findById(adminId)
