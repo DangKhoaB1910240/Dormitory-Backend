@@ -48,6 +48,7 @@ public class RegisterServicesService {
             registerServicesDTO.setPrice(r.getPrice());
             registerServicesDTO.setName(services.getName());
             registerServicesDTO.setStatus(r.getStatus());
+            registerServicesDTO.setMotorbikeLicensePlate(r.getMotorbikeLicensePlate());
             registerServicesDTOs.add(registerServicesDTO);
         }
         return registerServicesDTOs;
@@ -82,7 +83,14 @@ public class RegisterServicesService {
         int weeks = (int)startDate.until(endDate, java.time.temporal.ChronoUnit.WEEKS);
         Float weeklyPrice = service.getPrice()/4;
         registerServices.setPrice(weeklyPrice*weeks - holidayWeek*weeklyPrice);
-        
+        if (service.getName().equals("Gửi xe máy")) {
+            if (registerServices.getMotorbikeLicensePlate() == null || registerServices.getMotorbikeLicensePlate().isEmpty()) {
+                throw new InvalidValueException("Vui lòng nhập bản số xe máy");
+            }
+            // Lưu thông tin bản số xe máy vào đối tượng RegisterServices
+            registerServices.setMotorbikeLicensePlate(registerServices.getMotorbikeLicensePlate());
+        }
+
         registerServicesRepository.save(registerServices);
     }
     

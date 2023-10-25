@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoomTypeRepository extends JpaRepository<RoomType, Integer> {
     Boolean existsByName(String name);
+    List<RoomType> findAllByOrderByNameAsc();
     Optional<RoomType> findByName(String name);
     @Query("SELECT DISTINCT rt.maxQuantity FROM RoomType rt ORDER BY rt.maxQuantity ASC")
     List<Integer> findDistinctMaxQuantitiesSortedAsc();

@@ -41,7 +41,7 @@ public class RoomTypeService {
     }
 
     public List<RoomTypeResponseDTO> getAllRoomType() {
-        List<RoomType> roomTypes = roomTypeRepository.findAll();
+        List<RoomType> roomTypes = roomTypeRepository.findAllByOrderByNameAsc();
         return convertListRoomTypeToListResponseDTO(roomTypes);
     }
 

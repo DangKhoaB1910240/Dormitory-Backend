@@ -3,6 +3,7 @@ package com.Dormitory.contract;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,19 @@ public class ContractService {
         this.roomRepository=roomRepository;
         this.emailService = emailService;
     }
-
+    public List<Student> getAllStudentsFromContract(Integer roomTypeId, Integer numberRoom) {
+        RoomType roomType = roomTypeRepository.findById(roomTypeId)
+        .orElseThrow(() -> new NotFoundException("Không tìm thấy loại phòng với id: "+roomTypeId));
+        Sesmester sesmester = sesmesterRepository.findSesmesterByCurrentDateBetweenStartDateAndEndDate(LocalDate.now())
+        .orElseThrow(() -> new NotFoundException("Không tìm thấy học kỳ này"));
+        List<Contract> contracts = contractRepository.findByRoomTypeAndNumberRoomAndSesmesterId(roomType.getName(),numberRoom,sesmester.getId());
+        List<Student> students = new ArrayList<>();
+        for(Contract c : contracts) {
+            Student s = studentRepository.findById(c.getStudent().getId()).orElseThrow(() -> new NotFoundException("Không tồn tại sinh viên với id: "+c.getStudent().getId()));
+            students.add(s);
+        }
+        return students;
+    }
     public Contract getContract(Integer studentId, Integer sesmesterId) {
         studentRepository.findById(studentId).orElseThrow(() -> new NotFoundException("Không tồn tại sinh viên với id: "+studentId));
         sesmesterRepository.findById(sesmesterId).orElseThrow(() -> new NotFoundException("Không tồn tại học kỳ với id: "+sesmesterId));

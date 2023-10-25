@@ -38,6 +38,8 @@ public class RegisterServices {
     @ManyToOne
     @JoinColumn(name = "sesmester_id")
     private Sesmester sesmester;  // Đối tượng Services đại diện cho dịch vụ đã đăng ký
+    // Thêm trường cho bản số xe máy
+    private String motorbikeLicensePlate = new String();
     private Float price;
     private Integer status = 0;
 }

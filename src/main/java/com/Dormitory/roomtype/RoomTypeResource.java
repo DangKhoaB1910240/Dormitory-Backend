@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.Dormitory.image.ImageService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200","http://localhost:4401"})
 @RequestMapping("api/v1/roomtype")
 public class RoomTypeResource {
     

@@ -12,4 +12,5 @@ public class RegisterServicesDTO {
     private String name;
     private Float price;
     private Integer status;
+    private String motorbikeLicensePlate;
 }

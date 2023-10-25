@@ -1,7 +1,9 @@
 package com.Dormitory.email;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,47 @@ import jakarta.mail.internet.MimeMessage;
 public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
+    public void sendEmailForFeedback(Email email, Student student,String roomType,Integer numberRoom, LocalDate editDate) {
+        //Basic thôi
+        // SimpleMailMessage message = new SimpleMailMessage();
+        // message.setFrom("khoab1910240@gmail.com");
+        // message.setTo(toEmail);
+        // message.setText(body);
+        // message.setSubject(subject);
+        // mailSender.send(message);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
+        MimeMessage message = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom("Dormitory@gmail.com");
+            helper.setTo(email.getToEmail());
+            helper.setSubject(email.getSubject());
 
+            // Tạo nội dung HTML với các thẻ và CSS tùy chỉnh
+            String htmlContent = "<html lang='en'>\n" +
+            "  <head> </head>\n" +
+            "  <body>\n" +
+            "    <div>\n" +
+            "      Chào em, <b>"+student.getName()+"</b>. Tôi đã nhận được phản hồi về sửa chữa\n" +
+            "      phòng ở phòng của em cụ thể là loại phòng: <b>"+roomType+"</b>, số phòng:\n" +
+            "      <b>"+numberRoom+"</b>. Tôi sẽ cho nhân viên xuống sửa chữa vào ngày\n" +
+            "      <b> "+formatter.format(editDate)+" </b>. Em vui lòng phản hồi qua mail <b>lvut@ctu.edu.vn</b> một ngày khác\n" +
+            "      nếu hôm đó cả phòng bận việc ở ngoài và không có ở phòng\n" +
+            "    </div>\n" +
+            "    <div style=\"text-align: center\">\n" +
+            "      Ký túc xá Đại học Cần Thơ<br />\n" +
+            "      Trung tâm phục vụ Sinh viên - Phòng Cộng tác sinh viên<br />\n" +
+            "      Điện thoại Văn phòng: 0292.3872275 - Điện thoại di động: 0975 185 994\n" +
+            "      (Zalo)\n" +
+            "    </div>\n" +
+            "  </body>\n" +
+            "</html>";
+            helper.setText(htmlContent, true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
     public void sendEmail(Email email, Student student,RoomType roomType, Room room, Sesmester sesmester,Contract contract) {
         //Basic thôi
         // SimpleMailMessage message = new SimpleMailMessage();

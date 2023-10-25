@@ -45,5 +45,4 @@ public class RoomFeedback {
     @JoinColumn(name = "admin_id") // Thay đổi tên cột trong cơ sở dữ liệu nếu cần
     @ManyToOne(optional = true) // optional được đặt thành true để cho phép null
     private Admin admin; // Admin duyệt phản hồi này, có thể null
-    private String noteFromAdmin = new String();
 }
