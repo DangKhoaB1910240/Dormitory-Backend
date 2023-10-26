@@ -27,7 +27,11 @@ public class RoomTypeService {
         }
         roomTypeRepository.save(roomType);
     }
-    
+    public void updateRoomType(Integer id, RoomType roomType) {
+        RoomType r = roomTypeRepository.findById(id).orElseThrow(() -> new NotFoundException("Không tìm thấy loại phòng này"));
+        r.setEnable(roomType.getEnable());
+        roomTypeRepository.save(r);
+    }
     public RoomTypeResponseDTO getRoomTypeById(Integer id) {
         Optional<RoomType> roomType = roomTypeRepository.findById(id);
         RoomTypeResponseDTO roomTypeResponseDTO = new RoomTypeResponseDTO();

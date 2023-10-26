@@ -53,8 +53,10 @@ public class ContractService {
         List<Contract> contracts = contractRepository.findByRoomTypeAndNumberRoomAndSesmesterId(roomType.getName(),numberRoom,sesmester.getId());
         List<Student> students = new ArrayList<>();
         for(Contract c : contracts) {
-            Student s = studentRepository.findById(c.getStudent().getId()).orElseThrow(() -> new NotFoundException("Không tồn tại sinh viên với id: "+c.getStudent().getId()));
-            students.add(s);
+            if(c.getStatus() == 1) {
+                Student s = studentRepository.findById(c.getStudent().getId()).orElseThrow(() -> new NotFoundException("Không tồn tại sinh viên với id: "+c.getStudent().getId()));
+                students.add(s);
+            }
         }
         return students;
     }

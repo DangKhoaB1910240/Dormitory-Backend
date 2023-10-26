@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,12 @@ public class RoomTypeResource {
     @Autowired
     public RoomTypeResource(RoomTypeService roomTypeService, ImageService imageService) {
         this.roomTypeService = roomTypeService;
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<Void> updateRoomType(@PathVariable Integer id, @RequestBody RoomType roomType) {
+        roomTypeService.updateRoomType(id,roomType);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping()
