@@ -1,8 +1,10 @@
 package com.Dormitory.sesmester;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +22,5 @@ public interface SesmesterRepository extends JpaRepository<Sesmester, Integer> {
     @Query("SELECT s FROM Sesmester s " +
            "WHERE :currentDate BETWEEN s.startDate AND s.endDate")
     Optional<Sesmester> findSesmesterByCurrentDateBetweenStartDateAndEndDate(@Param("currentDate") LocalDate currentDate);
+       List<Sesmester> findAll(Sort sort);
 }

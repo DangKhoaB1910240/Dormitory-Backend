@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.Dormitory.admin.Admin;
 import com.Dormitory.admin.AdminRepository;
@@ -45,15 +48,69 @@ public class ContractService {
         this.roomRepository=roomRepository;
         this.emailService = emailService;
     }
+
+    public List<ContractResponseDTO> getContractFromFilter(
+        Integer sesmester,
+        String schoolYear,
+        String major,
+        String numberStudent,
+        Integer gender
+    ) { 
+        Sort sort = Sort.by(Sort.Order.asc("roomType"), Sort.Order.asc("numberRoom"));
+        List<Contract> contracts = contractRepository.findAll(sort);
+        for(int i =0;i<contracts.size();i++) {
+            if(contracts.get(i).getStatus() == 2) {
+                contracts.remove(i);
+            }
+        }
+        
+        if(sesmester !=null) {
+            contracts.removeIf(contract -> contract.getSesmester().getSesmester()!=sesmester);
+        }
+        if(schoolYear !=null) {
+            contracts.removeIf(contract -> !contract.getSesmester().getSchoolYear().equals(schoolYear));
+        }
+        if(major !=null) {
+            contracts.removeIf(contract -> !contract.getStudent().getMajor().equals(major));
+        }
+        if (numberStudent != null) {
+            String targetPrefix = numberStudent.substring(0, 3); // Lấy 3 ký tự đầu tiên của numberStudent
+            contracts.removeIf(contract -> !contract.getStudent().getNumberStudent().startsWith(targetPrefix));
+        }
+        if(gender !=null) {
+            contracts.removeIf(contract -> contract.getStudent().getGender()!=gender);
+        }
+        return convertToDTOs(contracts);
+    }
+
+    public List<ContractResponseDTO> convertToDTOs(List<Contract> contracts) {
+        List<ContractResponseDTO> contractResponseDTOs = new ArrayList<>();
+        for(Contract c : contracts) {
+            ContractResponseDTO contractResponseDTO = new ContractResponseDTO();
+            contractResponseDTO.setNumberStudent(c.getStudent().getNumberStudent());
+            contractResponseDTO.setClassroom(c.getStudent().getClassroom());
+            contractResponseDTO.setEmail(c.getStudent().getEmail());
+            contractResponseDTO.setName(c.getStudent().getName());
+            contractResponseDTO.setMajor(c.getStudent().getMajor());
+            contractResponseDTO.setPhone(c.getStudent().getPhone());
+            contractResponseDTO.setGender(c.getStudent().getGender());
+            contractResponseDTO.setRoomType(c.getRoomType());
+            contractResponseDTO.setNumberRoom(c.getNumberRoom());
+            contractResponseDTOs.add(contractResponseDTO);
+        }
+        return contractResponseDTOs;
+    }
+
     public List<Student> getAllStudentsFromContract(Integer roomTypeId, Integer numberRoom) {
         RoomType roomType = roomTypeRepository.findById(roomTypeId)
         .orElseThrow(() -> new NotFoundException("Không tìm thấy loại phòng với id: "+roomTypeId));
         Sesmester sesmester = sesmesterRepository.findSesmesterByCurrentDateBetweenStartDateAndEndDate(LocalDate.now())
         .orElseThrow(() -> new NotFoundException("Không tìm thấy học kỳ này"));
         List<Contract> contracts = contractRepository.findByRoomTypeAndNumberRoomAndSesmesterId(roomType.getName(),numberRoom,sesmester.getId());
+        
         List<Student> students = new ArrayList<>();
         for(Contract c : contracts) {
-            if(c.getStatus() == 1) {
+            if(c.getStatus() == 1 || c.getStatus() ==0) {
                 Student s = studentRepository.findById(c.getStudent().getId()).orElseThrow(() -> new NotFoundException("Không tồn tại sinh viên với id: "+c.getStudent().getId()));
                 students.add(s);
             }

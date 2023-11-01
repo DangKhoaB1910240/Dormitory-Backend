@@ -1,5 +1,7 @@
 package com.Dormitory.sesmester;
 
+import java.util.List;
+
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,5 +24,9 @@ public class SesmesterResource {
     @GetMapping("status/{status}")
     public ResponseEntity<Sesmester> getSesmesterByStatus(@PathVariable("status") Boolean status) {
         return ResponseEntity.status(HttpStatus.OK).body(sesmesterService.getSesmesterByStatus(status));
+    }
+    @GetMapping
+    public ResponseEntity<List<Sesmester>> getAllSesmester() {
+        return ResponseEntity.status(HttpStatus.OK).body(sesmesterService.getAllSesmester());
     }
 }

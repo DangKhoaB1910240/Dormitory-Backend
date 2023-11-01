@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Dormitory.service.Services;
@@ -31,6 +32,19 @@ public class ContractResource {
     public ResponseEntity<Contract> getContract(@PathVariable("studentId") Integer studentId,@PathVariable("sesmesterId") Integer sesmesterId ) {
         Contract contract = contractService.getContract(studentId,sesmesterId);
         return ResponseEntity.ok().body(contract);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ContractResponseDTO>> getContractFromFilter(
+        @RequestParam(required = false) Integer sesmester,
+        @RequestParam(required = false) String schoolYear,
+        @RequestParam(required = false) String major,
+        @RequestParam(required = false) String numberStudent,
+        @RequestParam(required = false) Integer gender
+    ) {
+        
+        return 
+        ResponseEntity.status(HttpStatus.OK).body(contractService.getContractFromFilter(sesmester,schoolYear,major,numberStudent,gender));
     }
 
     @PostMapping()
