@@ -13,6 +13,12 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
+    public void updateRoom(Integer id, Room room) {
+        Room r = roomRepository.findById(id).orElseThrow(() -> new NotFoundException("Không tồn tại phòng với id: "+id));
+        r.setEnable(room.getEnable());
+        roomRepository.save(r);
+    }
+
     public Room findRoomById(Integer id) {
         if(roomRepository.findById(id).isPresent()) {
             return roomRepository.findById(id).get();

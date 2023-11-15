@@ -1,5 +1,6 @@
 package com.Dormitory.roomtype;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.Dormitory.image.ImageService;
+import com.Dormitory.message.SuccessMessage;
+
+import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200","http://localhost:4401"})
@@ -30,7 +34,16 @@ public class RoomTypeResource {
     public RoomTypeResource(RoomTypeService roomTypeService, ImageService imageService) {
         this.roomTypeService = roomTypeService;
     }
+    @PostMapping("add")
+    public ResponseEntity<?> addRoomTypeWithImages(@RequestParam("images") List<MultipartFile> imageFiles,
+                                                 @RequestBody @Valid RoomType roomType) throws IOException {
 
+        // Call the service method to add RoomType with images
+        RoomType savedRoomType = roomTypeService.addRoomTypeWithImages(roomType.getName(),roomType.getMaxQuantity(), roomType.getPrice(), roomType.getIsAirConditioned(), roomType.getIsCooked(), imageFiles);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new SuccessMessage("Phòng đã được thêm vào thành công", HttpStatus.CREATED.value()));
+    }
     @PatchMapping("{id}")
     public ResponseEntity<Void> updateRoomType(@PathVariable Integer id, @RequestBody RoomType roomType) {
         roomTypeService.updateRoomType(id,roomType);

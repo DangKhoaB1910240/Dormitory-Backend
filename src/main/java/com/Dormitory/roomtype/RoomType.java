@@ -19,6 +19,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,30 +27,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity // Tạo bảng trong CSDL
+@Builder
 public class RoomType {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty(message = "Name cannot be empty")
+    @NotEmpty(message = "Tên dãy không thể bỏ trống")
     @Column(unique = true)
     private String name;
 
-    @NotNull(message = "MaxQuantity cannot be empty")
+    @NotNull(message = "Nhập số lượng sinh viên có thể ở tối đa")
     private Integer maxQuantity;
 
     @JsonSerialize
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "roomType")//ánh xạ tên biến bên Image
     private List<Image> images;
 
-    @NotNull(message = "Price cannot be empty")
+    @NotNull(message = "Gía phòng không thể bỏ trống")
     private Float price;
 
-    @NotNull(message = "IsAirConditioned cannot be empty")
+    @NotNull(message = "Phòng này có máy lạnh không ?")
     private Boolean isAirConditioned; // Có máy lạnh không
 
-    @NotNull(message = "IsCooked cannot be empty")
+    @NotNull(message = "Phòng này cho phép nấu ăn không ?")
     private Boolean isCooked; // Có nấu ăn không
 
     private Boolean enable = true;

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.Dormitory.config.JwtGenerator;
 import com.Dormitory.exception.AlreadyExistsException;
+import com.Dormitory.exception.InvalidValueException;
 import com.Dormitory.exception.NotFoundException;
 import com.Dormitory.role.Role;
 import com.Dormitory.role.RoleRepository;
@@ -81,6 +83,22 @@ public class UserService {
         }else { 
             return userRepository.findRoleNamesByUsername(username);
         }
+    }
+    @Transactional
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        User existingUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+
+        // Check if the old password matches
+        if (!passwordEncoder.matches(oldPassword, existingUser.getPassword())) {
+            throw new InvalidValueException("Mật khẩu cũ không đúng");
+        }
+
+        // Set and encode the new password
+        existingUser.setPassword(passwordEncoder.encode(newPassword));
+
+        // Save the updated user with the new password
+        userRepository.save(existingUser);
     }
 
 }

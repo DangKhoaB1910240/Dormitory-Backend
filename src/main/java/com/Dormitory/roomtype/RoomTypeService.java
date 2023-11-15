@@ -1,5 +1,6 @@
 package com.Dormitory.roomtype;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,10 +8,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.Dormitory.exception.AlreadyExistsException;
+import com.Dormitory.exception.InvalidValueException;
 import com.Dormitory.exception.NotFoundException;
 import com.Dormitory.image.Image;
+import com.Dormitory.image.ImageService;
 
 import jakarta.transaction.Transactional;
 
@@ -19,13 +23,51 @@ public class RoomTypeService {
     
     @Autowired
     private RoomTypeRepository roomTypeRepository;
-    
+    @Autowired 
+    private ImageService imageService;
     @Transactional
     public void addRoomType(RoomType roomType) {    
         if(roomTypeRepository.existsByName(roomType.getName())) {
             throw new AlreadyExistsException("Tên loại phòng đã bị trùng");
         }
         roomTypeRepository.save(roomType);
+    }
+     @Transactional
+    public RoomType addRoomTypeWithImages(String name, Integer maxQuantity, Float price,
+                                         Boolean isAirConditioned, Boolean isCooked, List<MultipartFile> imageFiles) throws IOException {
+
+        // Check if the room type with the given name already exists
+        if (roomTypeRepository.findByName(name).isPresent()) {
+            throw new AlreadyExistsException("Loại phòng " + name + " đã tồn tại");
+        }
+        if(maxQuantity <=1 || maxQuantity >8) {
+            throw new InvalidValueException("Vui lòng nhập số lượng từ 2 đến 8");
+        }
+        if(price<=0 || price %1000!=0) {
+            throw new InvalidValueException("Vui lòng nhập giá phòng lớn hơn 0 và chia hết cho 1000");
+        }
+        // Create RoomType object
+        RoomType roomType = RoomType.builder()
+                .name(name)
+                .maxQuantity(maxQuantity)
+                .price(price)
+                .isAirConditioned(isAirConditioned)
+                .isCooked(isCooked)
+                .build();
+
+        // Save RoomType to get its ID
+        RoomType savedRoomType = roomTypeRepository.save(roomType);
+
+        // Upload images for the RoomType
+        for (MultipartFile imageFile : imageFiles) {
+            imageService.uploadImage(imageFile, savedRoomType.getId());
+        }
+        // You can also set other details related to the images if needed
+
+        // Save the updated RoomType
+        roomTypeRepository.save(savedRoomType);
+
+        return savedRoomType;
     }
     public void updateRoomType(Integer id, RoomType roomType) {
         RoomType r = roomTypeRepository.findById(id).orElseThrow(() -> new NotFoundException("Không tìm thấy loại phòng này"));
