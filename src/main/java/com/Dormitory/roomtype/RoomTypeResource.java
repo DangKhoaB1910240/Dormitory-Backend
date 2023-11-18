@@ -35,11 +35,18 @@ public class RoomTypeResource {
         this.roomTypeService = roomTypeService;
     }
     @PostMapping("add")
-    public ResponseEntity<?> addRoomTypeWithImages(@RequestParam("images") List<MultipartFile> imageFiles,
-                                                 @RequestBody @Valid RoomType roomType) throws IOException {
+    public ResponseEntity<?> addRoomTypeWithImages(
+        @RequestParam("images") List<MultipartFile> imageFiles,
+        @RequestParam("name") String name,
+        @RequestParam("maxQuantity") Integer maxQuantity,
+        @RequestParam("price") Float price,
+        @RequestParam("isAirConditioned") Boolean isAirConditioned,
+        @RequestParam("isCooked") Boolean isCooked
+    ) throws IOException {
 
         // Call the service method to add RoomType with images
-        RoomType savedRoomType = roomTypeService.addRoomTypeWithImages(roomType.getName(),roomType.getMaxQuantity(), roomType.getPrice(), roomType.getIsAirConditioned(), roomType.getIsCooked(), imageFiles);
+        RoomType savedRoomType = roomTypeService
+        .addRoomTypeWithImages(name,maxQuantity, price, isAirConditioned, isCooked, imageFiles);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new SuccessMessage("Phòng đã được thêm vào thành công", HttpStatus.CREATED.value()));

@@ -13,6 +13,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,19 +28,16 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @NotNull(message = "Bạn phải nhập số phòng")
     private Integer numberRoom;
 
-    private Integer currentQuantity;
+    private Integer currentQuantity = 0;
 
-    private Boolean enable;
-
+    private Boolean enable = true;
+    @NotNull(message = "Vui lòng chọn giới tính")
     private Integer gender; //1 -> boy, 0-> girl
-
-    @JsonIgnore
+    @NotNull(message = "Vui lòng chọn id phòng")
     @ManyToOne // Một Room thuộc về một RoomType
     @JoinColumn(name = "room_type_id") // Đánh dấu khóa ngoại trỏ đến RoomType
     private RoomType roomType;
-
-
 }

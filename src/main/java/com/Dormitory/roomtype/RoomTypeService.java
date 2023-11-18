@@ -1,6 +1,7 @@
 package com.Dormitory.roomtype;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,9 @@ public class RoomTypeService {
                 .price(price)
                 .isAirConditioned(isAirConditioned)
                 .isCooked(isCooked)
+                .enable(true)
+                .createdDate(LocalDate.now())
+                .updatedDate(null)
                 .build();
 
         // Save RoomType to get its ID
