@@ -3,6 +3,9 @@ package com.Dormitory.contract;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -35,16 +38,17 @@ public class ContractResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<ContractResponseDTO>> getContractFromFilter(
+    public ResponseEntity<Page<ContractResponseDTO>> getContractFromFilter(
         @RequestParam(required = false) Integer sesmester,
         @RequestParam(required = false) String schoolYear,
         @RequestParam(required = false) String major,
         @RequestParam(required = false) String numberStudent,
-        @RequestParam(required = false) Integer gender
+        @RequestParam(required = false) Integer gender,
+        @PageableDefault(size = 10, sort = {"roomType", "numberRoom"}) Pageable pageable
     ) {
         
         return 
-        ResponseEntity.status(HttpStatus.OK).body(contractService.getContractFromFilter(sesmester,schoolYear,major,numberStudent,gender));
+        ResponseEntity.status(HttpStatus.OK).body(contractService.getContractFromFilter(sesmester,schoolYear,major,numberStudent,gender,pageable));
     }
 
     @PostMapping()

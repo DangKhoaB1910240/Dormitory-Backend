@@ -32,35 +32,27 @@ public class Student {
     private Integer id;
 
     @Column(unique = true)
-    @NotEmpty(message = "Username cannot be empty")
     private String numberStudent;
 
-    @NotEmpty(message = "Name cannot be empty")
     private String name;
     
-    @NotEmpty(message = "Address cannot be empty")
     private String address;
-
-    @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email invalid")
     private String email;
-
-    @NotEmpty(message = "Phone cannot be empty")
     private String phone;
 
-    @NotEmpty(message = "Major cannot be empty")
     private String major;
 
     private LocalDate birthday;
-
-    @NotNull(message = "Gender cannot be null")
     private Integer gender;//1 -> boy, 0-> girl
-
-    @NotEmpty(message = "Classroom cannot be empty")
     private String classroom;
 
     @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    private Integer status = 0;
+    //0 -> ổn
+    //1 -> ra trường rồi
+    //2 -> danh sách đen
 }

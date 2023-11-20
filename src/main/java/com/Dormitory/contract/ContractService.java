@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,20 +52,25 @@ public class ContractService {
         this.emailService = emailService;
     }
 
-    public List<ContractResponseDTO> getContractFromFilter(
+    public Page<ContractResponseDTO> getContractFromFilter(
         Integer sesmester,
         String schoolYear,
         String major,
         String numberStudent,
-        Integer gender
+        Integer gender,
+        Pageable pageable
     ) { 
-        Sort sort = Sort.by(Sort.Order.asc("roomType"), Sort.Order.asc("numberRoom"));
-        List<Contract> contracts = contractRepository.findAll(sort);
-        for(int i =0;i<contracts.size();i++) {
-            if(contracts.get(i).getStatus() == 2) {
-                contracts.remove(i);
-            }
-        }
+        // Sort sort = Sort.by(Sort.Order.asc("roomType"), Sort.Order.asc("numberRoom"));
+        
+        Page<Contract> contractsPage = contractRepository.findAll(pageable);
+        List<Contract> contracts = contractsPage.getContent();
+        // for(int i =0;i<contracts.size();i++) {
+        //     if(contracts.get(i).getStatus() == 2) {
+        //         contracts.remove(i);
+        //     }
+        // }
+        System.out.println(contracts);
+        contracts.removeIf(contract -> contract.getStatus() == 2);
         
         if(sesmester !=null) {
             contracts.removeIf(contract -> contract.getSesmester().getSesmester()!=sesmester);
@@ -80,7 +88,9 @@ public class ContractService {
         if(gender !=null) {
             contracts.removeIf(contract -> contract.getStudent().getGender()!=gender);
         }
-        return convertToDTOs(contracts);
+        List<ContractResponseDTO> contractDTOs = convertToDTOs(contracts);
+
+        return new PageImpl<>(contractDTOs, pageable, contractsPage.getTotalElements());
     }
 
     public List<ContractResponseDTO> convertToDTOs(List<Contract> contracts) {

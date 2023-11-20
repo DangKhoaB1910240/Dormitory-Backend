@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,11 @@ public class StudentResource {
         }else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @PatchMapping()
+    public ResponseEntity<Void> updateStatus(@RequestParam("numberStudent") String numberStudent,@RequestParam("status") Integer status) {
+        studentService.updateStatus(numberStudent,status);
+        return ResponseEntity.noContent().build();
     }
 
 }
