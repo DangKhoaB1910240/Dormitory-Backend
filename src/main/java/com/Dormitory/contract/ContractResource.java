@@ -44,11 +44,19 @@ public class ContractResource {
         @RequestParam(required = false) String major,
         @RequestParam(required = false) String numberStudent,
         @RequestParam(required = false) Integer gender,
-        @PageableDefault(size = 10, sort = {"roomType", "numberRoom"}) Pageable pageable
+        @PageableDefault(size = 6, sort = {"roomType", "numberRoom"}) Pageable pageable
     ) {
         
         return 
         ResponseEntity.status(HttpStatus.OK).body(contractService.getContractFromFilter(sesmester,schoolYear,major,numberStudent,gender,pageable));
+    }
+    @GetMapping("search")
+    public ResponseEntity<Page<ContractResponseDTO>> getContractFromSearchFilter(
+        @RequestParam(required = false) String search,
+        @PageableDefault(size = 6, sort = {"roomType", "numberRoom"}) Pageable pageable
+    ) {
+        return 
+        ResponseEntity.status(HttpStatus.OK).body(contractService.getContractFromFilter(search,pageable));
     }
 
     @PostMapping()

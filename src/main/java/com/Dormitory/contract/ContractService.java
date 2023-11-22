@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -51,7 +52,12 @@ public class ContractService {
         this.roomRepository=roomRepository;
         this.emailService = emailService;
     }
-
+    public Page<ContractResponseDTO> getContractFromFilter(String search, Pageable pageable) {
+        Page<Contract> contractPage = contractRepository.searchByStudentNameOrNumber(search, search, pageable);
+        List<Contract> contracts = new ArrayList<>(contractPage.getContent());
+        List<ContractResponseDTO> contractDTOs = convertToDTOs(contracts);
+        return new PageImpl<>(contractDTOs, pageable, contractPage.getTotalElements());
+    }
     public Page<ContractResponseDTO> getContractFromFilter(
         Integer sesmester,
         String schoolYear,
@@ -62,34 +68,10 @@ public class ContractService {
     ) { 
         // Sort sort = Sort.by(Sort.Order.asc("roomType"), Sort.Order.asc("numberRoom"));
         
-        Page<Contract> contractsPage = contractRepository.findAll(pageable);
-        List<Contract> contracts = contractsPage.getContent();
-        // for(int i =0;i<contracts.size();i++) {
-        //     if(contracts.get(i).getStatus() == 2) {
-        //         contracts.remove(i);
-        //     }
-        // }
-        System.out.println(contracts);
-        contracts.removeIf(contract -> contract.getStatus() == 2);
-        
-        if(sesmester !=null) {
-            contracts.removeIf(contract -> contract.getSesmester().getSesmester()!=sesmester);
-        }
-        if(schoolYear !=null) {
-            contracts.removeIf(contract -> !contract.getSesmester().getSchoolYear().equals(schoolYear));
-        }
-        if(major !=null) {
-            contracts.removeIf(contract -> !contract.getStudent().getMajor().equals(major));
-        }
-        if (numberStudent != null) {
-            String targetPrefix = numberStudent.substring(0, 3); // Lấy 3 ký tự đầu tiên của numberStudent
-            contracts.removeIf(contract -> !contract.getStudent().getNumberStudent().startsWith(targetPrefix));
-        }
-        if(gender !=null) {
-            contracts.removeIf(contract -> contract.getStudent().getGender()!=gender);
-        }
+        Page<Contract> contractsPage = contractRepository.findByFilter(sesmester, schoolYear, major, numberStudent, gender, pageable);
+        List<Contract> contracts = new ArrayList<>(contractsPage.getContent());
         List<ContractResponseDTO> contractDTOs = convertToDTOs(contracts);
-
+        
         return new PageImpl<>(contractDTOs, pageable, contractsPage.getTotalElements());
     }
 
@@ -97,6 +79,10 @@ public class ContractService {
         List<ContractResponseDTO> contractResponseDTOs = new ArrayList<>();
         for(Contract c : contracts) {
             ContractResponseDTO contractResponseDTO = new ContractResponseDTO();
+            contractResponseDTO.setId(c.getId());
+            contractResponseDTO.setStatus(c.getStatus());
+            contractResponseDTO.setTotalPrice(c.getTotalPrice());
+            contractResponseDTO.setStudentStatus(c.getStudent().getStatus());
             contractResponseDTO.setNumberStudent(c.getStudent().getNumberStudent());
             contractResponseDTO.setClassroom(c.getStudent().getClassroom());
             contractResponseDTO.setEmail(c.getStudent().getEmail());
@@ -175,47 +161,6 @@ public class ContractService {
         // Lưu hợp đồng vào CSDL
         contractRepository.save(contract);
     }
-
-    // public void registerServices(Integer contractId, List<Services> services) {
-    //     // Tìm hợp đồng theo ID
-    //     Contract contract = contractRepository.findById(contractId)
-    //         .orElseThrow(() -> new NotFoundException("Không tồn tại hợp đồng với ID: " + contractId));
-    //     //Tìm học kỳ    
-    //     Sesmester sesmester = sesmesterRepository.findByIdAndStatus(contract.getSesmester().getId(), true).orElseThrow(() -> new SesmesterDateValidationException("Học kỳ đang đóng"));
-    //     // Kiểm tra bên trong services
-    //     for(Services s: services) {
-    //         if (!s.getEnable()) {
-    //             throw new NotFoundException("Dịch vụ " + s.getName() + " không được kích hoạt.");
-    //         }
-            
-    //         // Kiểm tra xem bảng liên kết đã có cặp id contract và id service hay chưa
-    //         if (contract.getServices().stream().anyMatch(service -> service.getId().equals(s.getId()))) {
-    //             throw new AlreadyExistsException("Dịch vụ " + s.getName() + " đã được đăng ký trong hợp đồng này.");
-    //         }
-
-    //     }
-    //     // Thêm dịch vụ vào danh sách services của hợp đồng
-    //     contract.getServices().addAll(services);
-    //     // 
-    //     //Phần xử lý tính tổng giá nguyên học kì 
-    //     LocalDate startDate = sesmester.getStartDate();
-    //     LocalDate endDate = sesmester.getEndDate();
-    //     int holidayWeek = sesmester.getHolidayWeek();
-    //     // Tính số tháng giữa a và b
-    //     Period period = Period.between(startDate, endDate);
-    //     int months = period.getMonths();
-    //     // Tính số tuần giữa startDate và endDate
-    //     int weeks = (int)startDate.until(endDate, java.time.temporal.ChronoUnit.WEEKS);
-    //     RoomType roomType = roomTypeRepository.findByName(contract.getRoomType()).orElseThrow(() -> new NotFoundException("Không tồn tại tên loại phòng là: "+contract.getRoomType()));
-    //     Float weeklyPrice = roomType.getPrice()/4;
-    //     //Lấy tổng dịch vụ
-    //     Float totalPriceOfService = 0F;
-    //     for(Services s : contract.getServices()) {
-    //         totalPriceOfService += s.getPrice()/4;
-    //     }
-    //     contract.setTotalPrice(contract.getTotalPrice()+ totalPriceOfService*weeks - totalPriceOfService*holidayWeek);
-    //     // Lưu hợp đồng đã cập nhật vào CSDL
-    //     contractRepository.save(contract);
-    // }
+    
     
 }

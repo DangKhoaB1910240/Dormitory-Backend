@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContractResponseDTO {
+    private Integer id;
     private String numberStudent;
     private String name;
+    private Integer studentStatus;
     private String major;
     private String classroom;
     private String email;
@@ -17,4 +19,6 @@ public class ContractResponseDTO {
     private Integer gender;
     private String roomType;
     private Integer numberRoom;
+    private Integer status;
+    private Float totalPrice;
 }

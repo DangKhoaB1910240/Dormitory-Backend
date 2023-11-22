@@ -72,7 +72,7 @@ public class BillService {
         Float electricityCost = electricityConsumed * electricityRate;
         Float waterCost = waterConsumed * waterRate;
         Float totalCost = electricityCost + waterCost;
-        bill.setPrice(totalCost);
+        b.setPrice(totalCost);
         billRepository.save(b);
     }
     public void addBill(Integer adminId,BillRequestDTO requestDTO) {

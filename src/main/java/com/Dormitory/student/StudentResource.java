@@ -3,6 +3,9 @@ package com.Dormitory.student;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/student")
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200","http://localhost:4401"})
 public class StudentResource {
     
     @Autowired
@@ -45,6 +48,10 @@ public class StudentResource {
     public ResponseEntity<Void> updateStatus(@RequestParam("numberStudent") String numberStudent,@RequestParam("status") Integer status) {
         studentService.updateStatus(numberStudent,status);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("gratuation")
+    public ResponseEntity<Page<Student>> getStudentGratuation(@PageableDefault(size = 2) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudentGratuation(pageable));
     }
 
 }
