@@ -6,10 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.Dormitory.contract.Contract;
 import com.Dormitory.contract.ContractRepository;
+import com.Dormitory.contract.ContractResponseDTO;
 import com.Dormitory.exception.AlreadyExistsException;
 import com.Dormitory.exception.InvalidValueException;
 import com.Dormitory.exception.NotFoundException;
@@ -93,5 +97,21 @@ public class RegisterServicesService {
 
         registerServicesRepository.save(registerServices);
     }
-    
+    public Page<RegisterServices> getRegisterFromFilter(
+        Integer sesmester,
+        String schoolYear,
+        String major,
+        String numberStudent,
+        Integer gender,
+        Pageable pageable
+    ) { 
+        // Sort sort = Sort.by(Sort.Order.asc("roomType"), Sort.Order.asc("numberRoom"));
+        
+        Page<RegisterServices> registerPage = registerServicesRepository.findByFilter(sesmester, schoolYear, major, numberStudent, gender, pageable);
+        return new PageImpl<>(registerPage.getContent(), pageable, registerPage.getTotalElements());
+    }
+    public Page<RegisterServices> getRegisterFromFilter(String search, Pageable pageable) {
+        Page<RegisterServices> registerPage = registerServicesRepository.searchByStudentNameOrNumber(search, search, pageable);
+        return new PageImpl<>(registerPage.getContent(), pageable, registerPage.getTotalElements());
+    }
 }

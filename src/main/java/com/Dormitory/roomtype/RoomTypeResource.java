@@ -43,7 +43,6 @@ public class RoomTypeResource {
         @RequestParam("isAirConditioned") Boolean isAirConditioned,
         @RequestParam("isCooked") Boolean isCooked
     ) throws IOException {
-
         // Call the service method to add RoomType with images
         RoomType savedRoomType = roomTypeService
         .addRoomTypeWithImages(name,maxQuantity, price, isAirConditioned, isCooked, imageFiles);

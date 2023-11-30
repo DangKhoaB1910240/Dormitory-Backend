@@ -55,4 +55,5 @@ public class Student {
     //0 -> ổn
     //1 -> ra trường rồi
     //2 -> danh sách đen
+    //3 -> danh sách đen tự tạow
 }

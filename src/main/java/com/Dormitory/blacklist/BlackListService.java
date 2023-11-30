@@ -65,22 +65,25 @@ public class BlackListService {
     public void createBlackList(BlackList blackList) {
         Student student = studentRepository.findById(blackList.getStudent().getId())
         .orElseThrow(() -> new NotFoundException("Không tồn tại sinh viên này"));
-        student.setStatus(2);
+        student.setStatus(3);
         studentRepository.save(student);
         Sesmester sesmester = sesmesterRepository.findSesmesterByCurrentDateBetweenStartDateAndEndDate(LocalDate.now())
         .orElseThrow(() -> new NotFoundException("Không tồn tại học kỳ này"));
         Contract contract = contractRepository.findBySesmesterIdAndStudentId(sesmester.getId(),student.getId())
         .orElseThrow(() -> new NotFoundException("Không tồn tại hợp đồng"));
-        RoomType roomType = roomTypeRepository.findByName(contract.getRoomType())
-        .orElseThrow(() -> new NotFoundException("Không tìm thấy loại phòng này"));
-        Room room = roomRepository.findByNumberRoomAndRoomType_Id(contract.getNumberRoom(), roomType.getId())
-        .orElseThrow(() -> new NotFoundException("Không tồn tại loại phòng này"));
-        room.setCurrentQuantity(room.getCurrentQuantity()-1);
-        contract.setStatus(2);
+        // RoomType roomType = roomTypeRepository.findByName(contract.getRoomType())
+        // .orElseThrow(() -> new NotFoundException("Không tìm thấy loại phòng này"));
+        // Room room = roomRepository.findByNumberRoomAndRoomType_Id(contract.getNumberRoom(), roomType.getId())
+        // .orElseThrow(() -> new NotFoundException("Không tồn tại loại phòng này"));
+        // room.setCurrentQuantity(room.getCurrentQuantity()-1);
+        contract.setStatus(3);
         contractRepository.save(contract);
         blackListRepository.save(blackList);
     }
     public Page<BlackList> getAllBlackLists(Pageable pageable) {
         return blackListRepository.findAll(pageable);
+    }
+    public BlackList findByStudentId(Integer id) {
+        return blackListRepository.findByStudentId(id).orElseThrow(() -> new NotFoundException("Không tồn tại sinh viên với id: "+id));
     }
 }

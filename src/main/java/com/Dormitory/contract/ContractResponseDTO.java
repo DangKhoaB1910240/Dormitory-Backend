@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ContractResponseDTO {
     private Integer id;
+    private Integer studentId;
     private String numberStudent;
     private String name;
     private Integer studentStatus;
@@ -21,4 +22,5 @@ public class ContractResponseDTO {
     private Integer numberRoom;
     private Integer status;
     private Float totalPrice;
+    private Boolean isCurrentSesmester = false;
 }

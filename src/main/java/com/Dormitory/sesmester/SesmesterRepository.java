@@ -22,5 +22,12 @@ public interface SesmesterRepository extends JpaRepository<Sesmester, Integer> {
     @Query("SELECT s FROM Sesmester s " +
            "WHERE :currentDate BETWEEN s.startDate AND s.endDate")
     Optional<Sesmester> findSesmesterByCurrentDateBetweenStartDateAndEndDate(@Param("currentDate") LocalDate currentDate);
+    @Query("SELECT s FROM Sesmester s " +
+           "WHERE :currentDate BETWEEN :startDate AND :endDate")
+    Optional<Sesmester> findSesmesterByCurrentDateBetweenStartDateAndEndDate2(
+    @Param("currentDate") LocalDate currentDate,
+    @Param("startDate") LocalDate startDate,
+     @Param("endDate") LocalDate endDate
+    );
        List<Sesmester> findAll(Sort sort);
 }

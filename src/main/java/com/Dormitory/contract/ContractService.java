@@ -78,7 +78,10 @@ public class ContractService {
     public List<ContractResponseDTO> convertToDTOs(List<Contract> contracts) {
         List<ContractResponseDTO> contractResponseDTOs = new ArrayList<>();
         for(Contract c : contracts) {
+
+            
             ContractResponseDTO contractResponseDTO = new ContractResponseDTO();
+            contractResponseDTO.setStudentId(c.getStudent().getId());
             contractResponseDTO.setId(c.getId());
             contractResponseDTO.setStatus(c.getStatus());
             contractResponseDTO.setTotalPrice(c.getTotalPrice());
@@ -92,6 +95,13 @@ public class ContractService {
             contractResponseDTO.setGender(c.getStudent().getGender());
             contractResponseDTO.setRoomType(c.getRoomType());
             contractResponseDTO.setNumberRoom(c.getNumberRoom());
+            //Kiểm tra xem  biến c này có nằm trong học kỳ hiện tại hay không
+            //B1: LẤY SESMESTER từ biến c
+            Sesmester sesmester = c.getSesmester();
+            //B2: Lấy startDate và endDate từ biến sesmester kẹp chặt ngay hiện tại
+            if(sesmesterRepository.findSesmesterByCurrentDateBetweenStartDateAndEndDate2(LocalDate.now(), sesmester.getStartDate(), sesmester.getEndDate()).isPresent()) {
+                contractResponseDTO.setIsCurrentSesmester(true);
+            }
             contractResponseDTOs.add(contractResponseDTO);
         }
         return contractResponseDTOs;
@@ -106,7 +116,7 @@ public class ContractService {
         
         List<Student> students = new ArrayList<>();
         for(Contract c : contracts) {
-            if(c.getStatus() == 1 || c.getStatus() ==0) {
+            if(c.getStatus() == 1 || c.getStatus() ==0 || c.getStatus() ==3) {
                 Student s = studentRepository.findById(c.getStudent().getId()).orElseThrow(() -> new NotFoundException("Không tồn tại sinh viên với id: "+c.getStudent().getId()));
                 students.add(s);
             }
